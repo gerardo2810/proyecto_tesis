@@ -1,0 +1,363 @@
+
+https://support.huawei.com/enterprise/en/doc/EDOC1100367122/732c4b26/configuring-examples-for-sr-mpls-te#EN-US_TASK_0172368877
+=================================CONFIGURACION L3VPN over SR-MPLS TE =================================
+
+#PE-1
+syname PE1
+interface lo1
+ip address 1.1.1.9 32
+q
+interface g3/0/1
+ip address 172.16.1.1 24
+q
+
+
+#P1
+sys
+syname P1
+interface lo1
+ip address 2.2.2.9 32
+q
+interface g3/0/1
+ip address 172.16.1.2 24
+q
+interface g3/0/2
+ip address 172.17.1.1 24
+q
+
+#PE-2
+syname PE1
+interface lo1
+ip address 3.3.3.9 32
+q
+interface g3/0/2
+ip address 172.17.1.2 24
+q
+
+Ahora habilitaremos la parte de IS-IS en el backbone PE1,PE2 y P1
+
+#PE-1
+isis 1
+is-leve level-2
+network-entity 10.0000.0000.0001.00
+q
+interface lo1
+isis enable 1
+q
+interface g3/0/1
+isis enable 1
+q
+
+#P1
+isis 1
+is-leve level-2
+network-entity 10.0000.0000.0002.00
+q
+interface lo1
+isis enable 1
+q
+interface g3/0/1
+isis enable 1
+q
+interface g3/0/2
+isis enable 1
+q
+
+#PE-2
+isis 1
+is-leve level-2
+network-entity 10.0000.0000.0003.00
+q
+interface lo1
+isis enable 1
+q
+interface g3/0/2
+isis enable 1
+q
+
+3. Configurar basicas configuraciones MPLS y MPLS-TE en todo el backbone
+
+#PE-1
+mpls lsr-id 1.1.1.9
+mpls
+mpls te
+q
+comm
+
+#PE
+mpls lsr-id 2.2.2.9
+mpls
+mpls te
+q
+comm
+
+#PE-2
+mpls lsr-id 3.3.3.9
+mpls
+mpls te
+q
+comm
+
+4. Habilitar SR, establecer SR-MPLS TE tunel, especificar la direccion IP del tunel,
+	protocolo del tunel y direccion IP, especificar la ruta de computacion
+	
+#PE-1
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+q
+interface lo1
+isis prefix-sid absolute 16100
+q
+explicit-path pe2
+next sid label 16200 type prefix
+next sid label 16300 type prefix
+q
+interface tunnel1
+ip address unnumbered interface lo1
+tunnel-protocol mpls te
+destination 3.3.3.9
+mpls te tunnel-id 1
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2
+commit
+
+#P
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+interface lo1
+isis prefix-sid absolute 16200
+q
+comm
+
+#PE-2
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+q
+interface lo1
+isis prefix-sid absolute 16300
+q
+explicit-path pe1
+next sid label 16200 type prefix
+next sid label 16100 type prefix
+q
+interface tunnel1
+ip address unnumbered interface lo1
+tunnel-protocol mpls te
+destination 1.1.1.9
+mpls te tunnel-id 1
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1
+commit
+
+Verificar los caminos con display tunnel-info all    --Todo Ok
+Prueba ping con ping lsp segment-routing te Tunnel 1 --Todo Ok
+
+5. Establecer el MP-BGP relacionado a los PEs
+
+#PE-1
+bgp 100
+peer 3.3.3.9 as-number 100
+peer 3.3.3.9 connect-interface loopb 1
+ipv4-family vpnv4
+peer 3.3.3.9 enable
+commit
+
+#PE-2
+bgp 100
+peer 1.1.1.9 as-number 100
+peer 1.1.1.9 connect-interface loopb 1
+ipv4-family vpnv4
+peer 1.1.1.9 enable
+commit
+
+Despues de correr la configuracion correr display bgp peer o 
+display bgp vpn4 all peer en cada PE. Estos comandos muestran 
+las salidas de MP-BGP las relaciones y si el estado esta Established
+
+6. En cada PE, crea una VPN instance que permita las direcciones IPv4 y la 
+aplicamos a las interfaces conectadas a los CE 
+
+#PE-1
+ip vpn-instance vpna
+ipv4-family
+route-distinguisher 100:1
+vpn-target 111:1 both
+q
+q
+interface g3/0/3
+ip binding vpn-instance vpna
+ip address 10.1.1.2 24
+q 
+commit
+
+#PE-2
+ip vpn-instance vpna
+ipv4-family
+route-distinguisher 200:1
+vpn-target 111:1 both
+q
+q
+interface g3/0/3
+ip binding vpn-instance vpna
+ip address 10.2.1.2 24
+q 
+commit
+
+Correr la configuracion display ip vpn-instance verbose en cada PE
+El comando de salida muestra la configuracion de las VPN instance
+
+7. Configurar tunnel-policy p1
+
+#PE-1
+tunnel-policy p1
+tunnel select-seq sr-te load-balance-number 1
+q
+ip vpn-instance vpna
+ipv4-family
+tnl-policy p1
+q
+q
+comm
+
+#PE-2
+tunnel-policy p1
+tunnel select-seq sr-te load-balance-number 1
+q
+ip vpn-instance vpna
+ipv4-family
+tnl-policy p1
+q
+q
+
+8. Configurar el eBGP relacionado entre el PEs y CEs
+
+#CE-1
+interface lo1
+ip address 10.11.1.1 32
+q
+interface g3/0/3
+ip address 10.1.1.1 24
+q
+bgp 65410
+peer 10.1.1.2 as-number 100
+network 10.11.1.1 32
+q
+comm
+
+
+#PE-1
+bgp 100
+ipv4-family vpn-instance vpna
+peer 10.1.1.1 as-number 65410
+q
+comm
+
+#CE-2
+interface lo1
+ip address 10.22.2.2 32
+q
+interface g3/0/3
+ip address 10.2.1.1 24
+q
+bgp 65410
+peer 10.2.1.2 as-number 100
+network 10.22.2.2 32
+q
+comm
+
+#PE-2
+bgp 100
+ipv4-family vpn-instance vpna
+peer 10.2.1.1 as-number 65410
+q
+comm
+
+Despues de completar las configuraciones  colocar
+	1. display bgp vpn4 vpn-instance vpna peer: bgp relacion y si estan establecidad este PEs y CE
+	2. display ip routing-tab vpn-instance vpna: Muestra las salida de las rutas de los CE loopack interfaces
+
+
+
+
+#####PE-1#####
+bgp 100
+peer 3.3.3.9 as-number 100
+peer 3.3.3.9 connect-interface loopb 1
+peer 4.4.4.9 as-number 100
+peer 4.4.4.9 connect-interface loopb 1
+peer 2.2.2.9 as-number 100
+peer 2.2.2.9 connect-interface loopb 1
+ipv4-family vpnv4
+peer 2.2.2.9 enable
+y
+peer 3.3.3.9 enable
+y
+peer 4.4.4.9 enable
+y
+
+#####PE-2#####
+bgp 100
+peer 1.1.1.9 as-number 100
+peer 1.1.1.9 connect-interface loopb 1
+peer 3.3.3.9 as-number 100
+peer 3.3.3.9 connect-interface loopb 1
+peer 4.4.4.9 as-number 100
+peer 4.4.4.9 connect-interface loopb 1
+ipv4-family vpnv4
+peer 1.1.1.9 enable
+y
+peer 3.3.3.9 enable
+y
+peer 4.4.4.9 enable
+y
+
+
+#####PE-3#####
+bgp 100
+peer 1.1.1.9 as-number 100
+peer 1.1.1.9 connect-interface loopb 1
+peer 2.2.2.9 as-number 100
+peer 2.2.2.9 connect-interface loopb 1
+peer 4.4.4.9 as-number 100
+peer 4.4.4.9 connect-interface loopb 1
+ipv4-family vpnv4
+peer 1.1.1.9 enable
+y
+peer 3.3.3.9 enable
+y
+peer 4.4.4.9 enable
+y
+#####PE-4#####
+bgp 100
+peer 1.1.1.9 as-number 100
+peer 1.1.1.9 connect-interface loopb 1
+peer 3.3.3.9 as-number 100
+peer 3.3.3.9 connect-interface loopb 1
+peer 2.2.2.9 as-number 100
+peer 2.2.2.9 connect-interface loopb 1
+ipv4-family vpnv4
+peer 1.1.1.9 enable
+y
+peer 3.3.3.9 enable
+y
+peer 2.2.2.9 enable
+ycos	 
+
+
+
+ 

@@ -1,0 +1,643 @@
+===========3. Configurar basicas configuraciones MPLS y MPLS-TE en todo el backbone===========
+
+#################PE-1#############
+mpls lsr-id 1.1.1.10
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1
+segment-routing mpls
+segment-routing global-block 16000 20000
+q
+interface lo0
+isis prefix-sid absolute 16100
+q
+explicit-path pe3-1
+next sid label 17100 type prefix
+next sid label 17300 type prefix
+next sid label 16300 type prefix
+q
+
+explicit-path pe3-2
+next sid label 17100 type prefix
+next sid label 17400 type prefix
+next sid label 16300 type prefix
+q
+explicit-path pe4-1
+next sid label 17100 type prefix
+next sid label 17300 type prefix
+next sid label 16400 type prefix
+q
+
+explicit-path pe4-2
+next sid label 17100 type prefix
+next sid label 17400 type prefix
+next sid label 16400 type prefix
+q
+
+explicit-path pe3-3
+next sid label 17200 type prefix
+next sid label 17300 type prefix
+next sid label 16300 type prefix
+q
+
+explicit-path pe3-4
+next sid label 17200 type prefix
+next sid label 17400 type prefix
+next sid label 16300 type prefix
+q
+explicit-path pe4-3
+next sid label 17200 type prefix
+next sid label 17300 type prefix
+next sid label 16400 type prefix
+q
+
+explicit-path pe4-4
+next sid label 17200 type prefix
+next sid label 17400 type prefix
+next sid label 16400 type prefix
+q
+
+interface tunnel1
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 1
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-1
+commit
+comm
+
+interface tunnel2
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 2
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-2
+commit
+comm
+
+interface tunnel3
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 3
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-3
+commit
+comm
+
+interface tunnel4
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 4
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-4
+commit
+comm
+
+interface tunnel5
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 5
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-1
+commit
+comm
+
+interface tunnel6
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 6
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-2
+commit
+comm
+
+interface tunnel7
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 7
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-3
+commit
+comm
+
+interface tunnel8
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 8
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-4
+commit
+comm
+
+#################PE-2#################
+mpls lsr-id 2.2.2.10
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1
+segment-routing mpls
+segment-routing global-block 16000 20000
+q
+interface lo0
+isis prefix-sid absolute 16200
+q
+explicit-path pe3-1
+next sid label 17100 type prefix
+next sid label 17300 type prefix
+next sid label 16300 type prefix
+q
+
+explicit-path pe3-2
+next sid label 17100 type prefix
+next sid label 17400 type prefix
+next sid label 16300 type prefix
+q
+explicit-path pe4-1
+next sid label 17100 type prefix
+next sid label 17300 type prefix
+next sid label 16400 type prefix
+q
+
+explicit-path pe4-2
+next sid label 17100 type prefix
+next sid label 17400 type prefix
+next sid label 16400 type prefix
+q
+
+explicit-path pe3-3
+next sid label 17200 type prefix
+next sid label 17300 type prefix
+next sid label 16300 type prefix
+q
+
+explicit-path pe3-4
+next sid label 17200 type prefix
+next sid label 17400 type prefix
+next sid label 16300 type prefix
+q
+explicit-path pe4-3
+next sid label 17200 type prefix
+next sid label 17300 type prefix
+next sid label 16400 type prefix
+q
+
+explicit-path pe4-4
+next sid label 17200 type prefix
+next sid label 17400 type prefix
+next sid label 16400 type prefix
+q
+
+interface tunnel1
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 1
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-1
+commit
+comm
+
+interface tunnel2
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 2
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-2
+commit
+comm
+
+interface tunnel3
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 3
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-3
+commit
+comm
+
+interface tunnel4
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 4
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe3-4
+commit
+comm
+
+interface tunnel5
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 5
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-1
+commit
+comm
+
+interface tunnel6
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 6
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-2
+commit
+comm
+
+interface tunnel7
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 7
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-3
+commit
+comm
+
+interface tunnel8
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 4.4.4.10
+mpls te tunnel-id 8
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe4-4
+commit
+
+
+##################P-1######################
+mpls lsr-id 1.1.1.14
+mpls
+mpls te
+q
+comm
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+interface lo0
+isis prefix-sid absolute 17100
+q
+comm
+
+#####################P-2################
+mpls lsr-id 2.2.2.14
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+interface lo0
+isis prefix-sid absolute 17200
+q
+comm
+
+
+######################P-3################
+mpls lsr-id 3.3.3.14
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+interface lo0
+isis prefix-sid absolute 17300
+q
+comm
+
+#########################P-4##################
+mpls lsr-id 4.4.4.14
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+interface lo0
+isis prefix-sid absolute 17400
+q
+comm
+
+########################PE-3#########################
+mpls lsr-id 3.3.3.10
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1
+segment-routing mpls
+segment-routing global-block 16000 20000
+q
+interface lo0
+isis prefix-sid absolute 16300
+q
+explicit-path pe1-1
+next sid label 17300 type prefix
+next sid label 17100 type prefix
+next sid label 16100 type prefix
+q
+
+explicit-path pe1-2
+next sid label 17300 type prefix
+next sid label 17200 type prefix
+next sid label 16100 type prefix
+q
+explicit-path pe2-1
+next sid label 17300 type prefix
+next sid label 17200 type prefix
+next sid label 16200 type prefix
+q
+
+explicit-path pe2-2
+next sid label 17300 type prefix
+next sid label 17100 type prefix
+next sid label 16200 type prefix
+q
+
+explicit-path pe1-3
+next sid label 17400 type prefix
+next sid label 17100 type prefix
+next sid label 16100 type prefix
+q
+
+explicit-path pe1-4
+next sid label 17400 type prefix
+next sid label 17200 type prefix
+next sid label 16100 type prefix
+q
+explicit-path pe2-3
+next sid label 17400 type prefix
+next sid label 17100 type prefix
+next sid label 16200 type prefix
+q
+
+explicit-path pe2-4
+next sid label 17400 type prefix
+next sid label 17200 type prefix
+next sid label 16200 type prefix
+q
+
+interface tunnel1
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 1.1.1.10
+mpls te tunnel-id 1
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-1
+commit
+comm
+
+interface tunnel2
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 1.1.1.10
+mpls te tunnel-id 2
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-2
+commit
+comm
+
+interface tunnel3
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 3
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-3
+commit
+comm
+
+interface tunnel4
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 1.1.1.10
+mpls te tunnel-id 4
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-4
+commit
+comm
+
+interface tunnel5
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 5
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-1
+commit
+comm
+
+interface tunnel6
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 6
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-2
+commit
+comm
+
+interface tunnel7
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 7
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-3
+commit
+comm
+
+interface tunnel8
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 8
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-4
+commit
+comm
+
+########################PE-4############################
+mpls lsr-id 4.4.4.10
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1
+segment-routing mpls
+segment-routing global-block 16000 20000
+q
+interface lo0
+isis prefix-sid absolute 16400
+q
+explicit-path pe1-1
+next sid label 17300 type prefix
+next sid label 17100 type prefix
+next sid label 16100 type prefix
+q
+
+explicit-path pe1-2
+next sid label 17300 type prefix
+next sid label 17200 type prefix
+next sid label 16100 type prefix
+q
+explicit-path pe2-1
+next sid label 17300 type prefix
+next sid label 17200 type prefix
+next sid label 16200 type prefix
+q
+
+explicit-path pe2-2
+next sid label 17300 type prefix
+next sid label 17100 type prefix
+next sid label 16200 type prefix
+q
+
+explicit-path pe1-3
+next sid label 17400 type prefix
+next sid label 17100 type prefix
+next sid label 16100 type prefix
+q
+
+explicit-path pe1-4
+next sid label 17400 type prefix
+next sid label 17200 type prefix
+next sid label 16100 type prefix
+q
+explicit-path pe2-3
+next sid label 17400 type prefix
+next sid label 17100 type prefix
+next sid label 16200 type prefix
+q
+
+explicit-path pe2-4
+next sid label 17400 type prefix
+next sid label 17200 type prefix
+next sid label 16200 type prefix
+q
+
+interface tunnel1
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 1.1.1.10
+mpls te tunnel-id 1
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-1
+commit
+comm
+
+interface tunnel2
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 1.1.1.10
+mpls te tunnel-id 2
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-2
+commit
+comm
+
+interface tunnel3
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 3.3.3.10
+mpls te tunnel-id 3
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-3
+commit
+comm
+
+interface tunnel4
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 1.1.1.10
+mpls te tunnel-id 4
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe1-4
+commit
+comm
+
+interface tunnel5
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 5
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-1
+commit
+comm
+
+interface tunnel6
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 6
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-2
+commit
+comm
+
+interface tunnel7
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 7
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-3
+commit
+comm
+
+interface tunnel8
+ip address unnumbered interface lo0
+tunnel-protocol mpls te
+destination 2.2.2.10
+mpls te tunnel-id 8
+mpls te signal-protocol segment-routing
+mpls te path explicit-path pe2-4
+commit
+comm
+
+Habilitar SR, establecer SR-MPLS TE tunel, especificar la direccion IP del tunel,
+	protocolo del tunel y direccion IP, especificar la ruta de computacion
+	

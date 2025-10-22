@@ -1,0 +1,448 @@
+=========================Configuracion SR-MPLS=====================
+https://sg.o3community.huawei.com/sg/en/learning/1783685055601291266
+1. Se uniran 3 sities  == 2 CEs
+2. Se usaran 8 routers == 4 PE y 2 P
+3. Se usara 2 router   =  2 RR                                                                                                                                                                                                                                                                                                                                                                                                                       
+-------------------------------
+				TOTAL =   10 ROUTERS
+
+Todos los PE-X seran lo1 = X.X.X.10
+Todos los P-X seran lo1 = X.X.X.14
+Todos los RR-X seran lo1 = X.X.X.27
+
+Enlaces fisicos
+	PE-1<-->P-1 = 172.10.1.0 30
+	PE-1<-->P-2 = 172.14.1.0 30
+	PE-1<-->PE-2 = 172.27.1.0 30
+	
+	PE-2<-->P-1 = 172.25.1.0 30
+	PE-2<-->P-2 = 172.28.1.0 30
+	
+	PE-3<-->P-1 = 172.18.1.0 30
+	PE-3<-->P-2 = 172.30.1.0 30
+	PE-3<-->PE-4 = 172.15.1.0 30
+	
+	PE-4<-->P-1 = 172.8.1.0 30
+	PE-4<-->P-2 = 172.5.1.0 30
+	
+	P-1<-->P-2 = 172.12.1.0 30
+	
+
+Configuracion De interfaces y Lo0
+
+#####PE-1#####
+interface lo1
+ip addres 1.1.1.10 32
+interface g3/0/0
+ip addres 172.10.1.1 30
+interface g3/0/2
+ip addres 172.14.1.1 30
+interface g3/0/5
+ip addres 192.168.1.1 30 
+interface g3/0/6
+ip addres 192.168.2.1 30 
+commit
+
+#####PE-2#####
+interface lo1
+ip addres 2.2.2.10 32
+interface g3/0/0
+ip addres 172.25.1.1 30
+interface g3/0/2
+ip addres 172.28.1.1 30
+interface g3/0/5 
+ip addres 192.168.2.5 30
+interface g3/0/6
+ip addres 192.168.1.5 30
+commit
+
+#####P-1#####
+interface lo1
+ip addres 1.1.1.14 32
+interface g3/0/0
+ip addres 172.10.1.2 30
+interface g3/0/2
+ip addres 172.28.1.2 30
+interface g3/0/1 
+ip addres 172.18.1.2 30
+interface g3/0/4
+ip addres 172.12.1.1 30
+interface g3/0/3
+ip addres 172.8.1.2 30
+commit
+
+#####P-2#####
+interface lo1
+ip addres 2.2.2.14 32
+interface g3/0/0
+ip addres 172.25.1.2 30
+interface g3/0/2
+ip addres 172.14.1.2 30
+interface g3/0/1 
+ip addres 172.5.1.2 30
+interface g3/0/4
+ip addres 172.12.1.2 30
+interface g3/0/3
+ip addres 172.30.1.2 30
+commit
+
+#####P-3#####
+interface lo1
+ip addres 3.3.3.14 32
+interface g3/0/0
+ip addres 172.15.1.1 30
+interface g3/0/1
+ip addres 172.18.1.1 30
+interface g3/0/3 
+ip addres 172.30.1.1 30
+interface g3/0/5
+ip addres 172.24.1.2 30
+interface g3/0/6
+ip addres 172.7.1.2 30
+commit
+
+#####P-4#####
+interface lo1
+ip addres 4.4.4.14 32
+interface g3/0/0
+ip addres 172.25.1.2 30
+interface g3/0/1
+ip addres 172.5.1.1 30
+interface g3/0/3 
+ip addres 172.8.1.1 30
+interface g3/0/5
+ip addres 172.27.1.2 30
+interface g3/0/6
+ip addres 172.9.1.2 30
+commit
+
+#####PE-3#####
+interface lo1
+ip addres 3.3.3.10 32
+interface g3/0/2
+ip addres 192.168.3.1 30
+interface g3/0/5
+ip addres 172.27.1.1 30
+interface g3/0/6 
+ip addres 172.7.1.1 30
+commit
+
+#####PE-4#####
+interface lo1
+ip addres 4.4.4.10 32
+interface g3/0/3
+ip addres 192.168.3.5 30
+interface g3/0/5
+ip addres 172.24.1.1 30
+interface g3/0/6 
+ip addres 172.9.1.1 30
+commit
+
+
+=======================================2. Habilitamos IS-IS-I=================================
+Unir dos isis level 1 y 2 como asignar interfaces 
+#####PE-1#####
+isis 1
+is-leve level-1
+network-entity 49.0001.0000.0001.00
+interface lo1
+isis enable 1 
+interface g3/0/0
+isis enable 1
+interface g3/0/2
+isis enable 1
+commit
+
+#####PE-2#####
+isis 1
+is-leve level-1
+network-entity 49.0001.0000.0002.00
+interface lo1
+isis enable 1
+interface g3/0/0
+isis enable 1
+interface g3/0/2
+isis enable 1
+
+commit
+
+#####P-1#####
+isis 1
+is-leve level-1-2                    DUDA SOBRE COMO SEPARAR DOMINIOS IS-IS
+network-entity 49.0000.0000.0001.00
+interface lo1
+isis enable 1
+interface g3/0/0
+isis enable 1
+interface g3/0/2
+isis enable 1
+interface g3/0/1 
+isis enable 1
+interface g3/0/4
+isis enable 1
+interface g3/0/3
+isis enable 1
+commit
+
+#####P-2#####
+isis 1
+is-leve level-1-2 
+network-entity 49.0000.0000.0002.00
+interface lo1
+isis enable 1
+interface g3/0/0
+isis enable 1
+interface g3/0/2
+isis enable 1
+interface g3/0/1 
+isis enable 1
+interface g3/0/4
+isis enable 1
+interface g3/0/3
+isis enable 1
+commit
+
+#####P-3#####
+isis 1
+is-leve level-1-2 
+network-entity 49.0000.0000.0003.00
+interface lo1
+isis enable 1
+interface g3/0/0
+isis enable 1
+interface g3/0/5
+isis enable 1
+interface g3/0/1 
+isis enable 1
+interface g3/0/6
+isis enable 1
+interface g3/0/3
+isis enable 1
+commit
+
+#####P-4#####
+isis 1
+is-leve level-1-2 
+network-entity 49.0000.0000.0004.00
+interface lo1
+isis enable 1
+interface g3/0/0
+isis enable 1
+interface g3/0/6
+isis enable 1
+interface g3/0/1 
+isis enable 1
+interface g3/0/5
+isis enable 1
+interface g3/0/3
+isis enable 1
+commit
+
+#####PE-3#####
+isis 1												#DUDA
+is-leve level-1
+network-entity 49.0002.0000.0001.00
+interface lo1
+isis enable 1
+interface g3/0/5
+isis enable 1
+interface g3/0/6
+isis enable 1
+commit
+
+#####PE-4#####
+interface lo1
+isis 1
+is-leve level-1
+network-entity 49.0002.0000.0002.00
+interface g3/0/5
+isis enable 1
+interface g3/0/6
+isis enable 1
+commit
+
+===========3. Configurar basicas configuraciones MPLS y MPLS-TE en todo el backbone===========
+
+
+Todos los PE-X seran lo1 = X.X.X.10
+Todos los P-X seran lo1 = X.X.X.14
+Todos los RR-X seran lo1 = X.X.X.27
+
+#####PE-1#####
+mpls lsr-id 1.1.1.10
+mpls
+mpls te
+q
+comm
+
+#####PE-2#####
+mpls lsr-id 2.2.2.10
+mpls
+mpls te
+q
+comm
+
+#####P-1#####
+mpls lsr-id 1.1.1.14
+mpls
+mpls te
+q
+comm
+
+#####P-2#####
+mpls lsr-id 2.2.2.14
+mpls
+mpls te
+q
+comm
+
+#####P-3#####
+mpls lsr-id 3.3.3.14
+mpls
+mpls te
+q
+comm
+
+#####P-4#####
+mpls lsr-id 4.4.4.14
+mpls
+mpls te
+q
+comm
+
+#####PE-3#####
+mpls lsr-id 3.3.3.10
+mpls
+mpls te
+q
+comm
+
+#####PE-4#####
+mpls lsr-id 4.4.4.10
+mpls
+mpls te
+q
+comm
+
+
+4. Habilitar SR, establecer SR-MPLS TE tunel, especificar la direccion IP del tunel,
+	protocolo del tunel y direccion IP, especificar la ruta de computacion
+	
+	
+5. Establecer el MP-BGP relacionado a los PEs
+
+#####PE-1#####
+bgp 100
+router-id 1.1.1.10
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-interface loopb 1
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-interface loopb 1
+ipv4-family SR-DOMAIN
+peer 1.1.1.14 enable
+y
+peer 2.2.2.14 enable
+y
+
+#####PE-2#####
+bgp 100
+router-id 2.2.2.10
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-interface loopb 1
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-interface loopb 1
+ipv4-family SR-DOMAIN
+peer 1.1.1.14 enable
+y
+peer 2.2.2.14 enable
+y
+
+
+#####PE-3#####
+bgp 100
+router-id 3.3.3.10
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-interface loopb 1
+peer 4.4.4.14 as-number 100
+peer 4.4.4.14 connect-interface loopb 1
+ipv4-family SR-DOMAIN
+peer 3.3.3.14 enable
+y
+peer 4.4.4.14 enable
+y
+
+#####PE-4#####
+bgp 100
+router-id 4.4.4.10 
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-interface loopb 1
+peer 4.4.4.14 as-number 100
+peer 4.4.4.14 connect-interface loopb 1
+ipv4-family SR-DOMAIN
+peer 3.3.3.14 enable
+y
+peer 4.4.4.14 enable
+y
+
+
+#### P-1 ######
+bgp 100
+router-id  1.1.1.14
+group in_rr internal
+peer 1.1.1.10 group in_rr
+peer 2.2.2.10 group in_rr
+comando para compartir la loopback como connect-interface lo0 !!!
+ipv4-family SR-DOMAIN
+peer in_rr reflect-client
+y
+comando para compartir la loopback como connect-interface lo0 !!!
+undo reflect between-client
+reflector cluster-id 1
+q
+
+#### P-2 ###### Posiblemente Falte Peer
+bgp 100
+router-id  2.2.2.14
+group in_rr internal
+peer 1.1.1.10 group in_rr
+peer 2.2.2.10 group in_rr
+comando para compartir la loopback como connect-interface lo0 !!!
+ipv4-family SR-DOMAIN
+peer in_rr reflect-client
+y
+comando para compartir la loopback como connect-interface lo0 !!!
+undo reflect between-client
+reflector cluster-id 1
+q
+
+#### P-3 ######
+bgp 100
+router-id  3.3.3.14
+group in_rr internal
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 group in_rr
+comando para compartir la loopback como connect-interface lo0 !!!
+ipv4-family SR-DOMAIN
+peer in_rr reflect-client
+y
+comando para compartir la loopback como connect-interface lo0 !!!
+undo reflect between-client
+reflector cluster-id 1
+q
+
+#### P-3 ######
+bgp 100
+router-id  3.3.3.14
+group in_rr internal
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 group in_rr
+comando para compartir la loopback como connect-interface lo0 !!!
+ipv4-family SR-DOMAIN
+peer in_rr reflect-client
+y
+comando para compartir la loopback como connect-interface lo0 !!!
+undo reflect between-client
+reflector cluster-id 1
+q
+
+
