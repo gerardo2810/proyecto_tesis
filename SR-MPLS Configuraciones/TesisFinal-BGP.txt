@@ -1,0 +1,220 @@
+
+################PE-1##################
+bgp 100
+router-id 1.1.1.10
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-inter lo0
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-inter lo0
+
+ipv4-family vpnv4
+reflect cluster-id 1
+peer 1.1.1.14 enable
+peer 2.2.2.14 enable
+
+
+################PE-2##################
+bgp 100
+router-id 2.2.2.10
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-inter lo0
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-inter lo0
+
+ipv4-family vpnv4
+peer 1.1.1.14 enable
+peer 2.2.2.14 enable
+
+
+################PE-3##################
+bgp 100
+router-id 3.3.3.10
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-inter lo0
+peer 4.4.4.14 as-number 100
+peer 4.4.4.14 connect-inter lo0
+
+ipv4-family vpnv4
+reflect cluster-id 1
+peer 3.3.3.14 enable
+peer 4.4.4.14 enable
+
+Mira aqui te paso las configuraciones de mis equipos tu crees que esta bien te paso una 
+configuracion PE-4 y P-4. No estoy colocando nada en el ipv4-family unicast estaria bien? 
+mas me interesa que se pueda pasar vpns de CE-1 C-2 a C-3 tu crees que este bien esto? o
+ me falta el next hot o configurar en el unicast o quitar algun peer dame un feedback la 
+ configuracion se usara en equipos huawei ################PE-4##################
+bgp 100
+router-id 4.4.4.10
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-inter lo0
+peer 4.4.4.14 as-number 100
+peer 4.4.4.14 connect-inter lo0
+
+ipv4-family vpnv4
+reflect cluster-id 1
+peer 3.3.3.14 enable
+peer 4.4.4.14 enable
+################P-4################
+bgp 100
+router-id 4.4.4.14
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-inter lo0
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-inter lo0
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-inter lo0
+group  in_rr internal
+peer 3.3.3.10 as-number 100
+peer 3.3.3.10 connect-inter lo0
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 as-number 100
+peer 4.4.4.10 connect-inter lo0
+peer 4.4.4.10 group in_rr
+
+ipv4-family vpnv4
+und reflect between-client
+reflect cluster-id 2
+peer 1.1.1.14 enable
+peer 3.3.3.14 enable
+peer 2.2.2.14 enable
+peer in_rr enable
+peer in_rr reflect-client
+peer 3.3.3.10 enable
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 enable
+peer 4.4.4.10 group in_rr
+
+################PE-4##################
+bgp 100
+router-id 4.4.4.10
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-inter lo0
+peer 4.4.4.14 as-number 100
+peer 4.4.4.14 connect-inter lo0
+
+ipv4-family vpnv4
+reflect cluster-id 1
+peer 3.3.3.14 enable
+peer 4.4.4.14 enable
+
+################P-1################
+bgp 100
+router-id 1.1.1.14
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-inter lo0
+peer 4.4.4.14 as-number 100
+peer 4.4.4.14 connect-inter lo0
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-inter lo0
+group  in_rr internal
+peer 1.1.1.10 as-number 100
+peer 1.1.1.10 connect-inter lo0
+peer 1.1.1.10 group in_rr
+peer 2.2.2.10 as-number 100
+peer 2.2.2.10 connect-inter lo0
+peer 2.2.2.10 group in_rr
+
+ipv4-family vpnv4
+und reflect between-client
+reflect cluster-id 1
+peer 3.3.3.14 enable
+peer 4.4.4.14 enable
+peer 2.2.2.14 enable
+peer in_rr enable
+peer in_rr reflect-client
+peer 1.1.1.10 enable
+peer 1.1.1.10 group in_rr
+peer 2.2.2.10 enable
+peer 2.2.2.10 group in_rr
+
+################P-2################
+bgp 100
+router-id 2.2.2.14
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-inter lo0
+peer 4.4.4.14 as-number 100
+peer 4..4.4.14 connect-inter lo0
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-inter lo0
+group  in_rr internal
+peer 1.1.1.10 as-number 100
+peer 1.1.1.10 connect-inter lo0
+peer 1.1.1.10 group in_rr
+peer 2.2.2.10 as-number 100
+peer 2.2.2.10 connect-inter lo0
+peer 2.2.2.10 group in_rr
+
+ipv4-family vpnv4
+und reflect between-client
+reflect cluster-id 1
+peer 3.3.3.14 enable
+peer 4.4.4.14 enable
+peer 2.2.2.14 enable
+peer in_rr enable
+peer in_rr reflect-client
+peer 1.1.1.10 enable
+peer 1.1.1.10 group in_rr
+peer 2.2.2.10 enable
+peer 2.2.2.10 group in_rr
+
+
+################P-3################
+bgp 100
+router-id 3.3.3.14
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-inter lo0
+peer 4.4.4.14 as-number 100
+peer 4.4.4.14 connect-inter lo0
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-inter lo0
+group  in_rr internal
+peer 3.3.3.10 as-number 100
+peer 3.3.3.10 connect-inter lo0
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 as-number 100
+peer 4.4.4.10 connect-inter lo0
+peer 4.4.4.10 group in_rr
+
+ipv4-family vpnv4
+und reflect between-client
+reflect cluster-id 2
+peer 1.1.1.14 enable
+peer 4.4.4.14 enable
+peer 2.2.2.14 enable
+peer in_rr enable
+peer in_rr reflect-client
+peer 3.3.3.10 enable
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 enable
+peer 4.4.4.10 group in_rr
+
+################P-4################
+bgp 100
+router-id 4.4.4.14
+peer 1.1.1.14 as-number 100
+peer 1.1.1.14 connect-inter lo0
+peer 3.3.3.14 as-number 100
+peer 3.3.3.14 connect-inter lo0
+peer 2.2.2.14 as-number 100
+peer 2.2.2.14 connect-inter lo0
+group  in_rr internal
+peer 3.3.3.10 as-number 100
+peer 3.3.3.10 connect-inter lo0
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 as-number 100
+peer 4.4.4.10 connect-inter lo0
+peer 4.4.4.10 group in_rr
+
+ipv4-family vpnv4
+und reflect between-client
+reflect cluster-id 2
+peer 1.1.1.14 enable
+peer 3.3.3.14 enable
+peer 2.2.2.14 enable
+peer in_rr enable
+peer in_rr reflect-client
+peer 3.3.3.10 enable
+peer 3.3.3.10 group in_rr
+peer 4.4.4.10 enable
+peer 4.4.4.10 group in_rr
