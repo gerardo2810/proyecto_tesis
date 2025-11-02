@@ -271,7 +271,7 @@ return
 
 #################P-4#########################
 system-view
-sysname P-3
+sysname P-4
 #
 interface GigabitEthernet 3/0/0
  description P-4 <-> P-3
