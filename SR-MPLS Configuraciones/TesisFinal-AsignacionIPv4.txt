@@ -83,11 +83,13 @@ interface GigabitEthernet3/0/2
  undo shutdown
 #
 interface GigabitEthernet3/0/5
+ ip binding vpn-instance CUSTOMER_1
  description PE-1 <-> CE-1
  ip address 192.168.1.1 255.255.255.252
  undo shutdown
 #
 interface GigabitEthernet3/0/6
+ ip binding vpn-instance CUSTOMER_2
  description PE-1 <-> CE-2
  ip address 192.168.2.1 255.255.255.252
  undo shutdown
@@ -123,11 +125,13 @@ interface GigabitEthernet3/0/2
  undo shutdown
 #
 interface GigabitEthernet3/0/5
+ ip binding vpn-instance CUSTOMER_2
  description PE-2 <-> CE-2
  ip address 192.168.2.5 255.255.255.252
  undo shutdown
 #
 interface GigabitEthernet3/0/6
+ ip binding vpn-instance CUSTOMER_1
  description PE-2 <-> CE-1
  ip address 192.168.1.5 255.255.255.252
  undo shutdown
@@ -142,7 +146,7 @@ return
 system-view
 sysname PE-3
 #
-ip vpn-instance CUSTOMER_1
+ip vpn-instance CUSTOMER_3
 ipv4-family
 route-distinguisher 300:1
 vpn-target 111:1 both
