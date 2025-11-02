@@ -439,7 +439,7 @@ comm
 interface tunnel3
 ip address unnumbered interface lo0
 tunnel-protocol mpls te
-destination 3.3.3.10
+destination 1.1.1.10
 mpls te tunnel-id 3
 mpls te signal-protocol segment-routing
 mpls te path explicit-path pe1-3
