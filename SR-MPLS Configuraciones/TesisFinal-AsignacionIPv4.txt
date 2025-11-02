@@ -14,12 +14,12 @@ Todos los RR-X seran lo1 = X.X.X.27
 system-view
 sysname CE-1
 #
-interface GigabitEthernet3/0/5
+interface GigabitEthernet0/0/5
  description CE-1 <-> PE-1
  ip address 192.168.1.2 255.255.255.252
  undo shutdown
 #
-interface GigabitEthernet3/0/6
+interface GigabitEthernet0/0/6
  description CE-1 <-> PE-2
  ip address 192.168.1.6 255.255.255.252
  undo shutdown
@@ -30,12 +30,12 @@ return
 system-view
 sysname CE-2
 #
-interface GigabitEthernet3/0/5
+interface GigabitEthernet0/0/5
  description CE-2 <-> PE-2
  ip address 192.168.2.6 255.255.255.252
  undo shutdown
 #
-interface GigabitEthernet3/0/6
+interface GigabitEthernet0/0/6
  description CE-2 <-> PE-1
  ip address 192.168.2.2 255.255.255.252
  undo shutdown
@@ -46,12 +46,12 @@ return
 system-view
 sysname CE-3
 #
-interface GigabitEthernet3/0/2
+interface GigabitEthernet0/0/2
  description CE-3 <-> PE-3
  ip address 192.168.3.2 255.255.255.252
  undo shutdown
 #
-interface GigabitEthernet3/0/3
+interface GigabitEthernet0/0/3
  description CE-3 <-> PE-4
  ip address 192.168.3.6 255.255.255.252
  undo shutdown
