@@ -62,6 +62,16 @@ return
 system-view
 sysname PE-1
 #
+ip vpn-instance CUSTOMER_1
+ipv4-family
+route-distinguisher 100:1
+vpn-target 111:1 both
+#
+ip vpn-instance CUSTOMER_2
+ipv4-family
+route-distinguisher 200:1
+vpn-target 111:1 both
+#
 interface GigabitEthernet3/0/0
  description PE-1 <-> P-1
  ip address 172.10.1.1 255.255.255.252
@@ -91,6 +101,16 @@ return
 #################PE-2#########################
 system-view
 sysname PE-2
+#
+ip vpn-instance CUSTOMER_1
+ipv4-family
+route-distinguisher 100:1
+vpn-target 111:1 both
+#
+ip vpn-instance CUSTOMER_2
+ipv4-family
+route-distinguisher 200:1
+vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/0
  description PE-2 <-> P-2
@@ -122,6 +142,11 @@ return
 system-view
 sysname PE-3
 #
+ip vpn-instance CUSTOMER_1
+ipv4-family
+route-distinguisher 300:1
+vpn-target 111:1 both
+#
 interface GigabitEthernet3/0/2
  description PE-3 <-> CE-3
  ip address 192.168.3.1 255.255.255.252
@@ -145,6 +170,11 @@ return
 #################PE-4#########################
 system-view
 sysname PE-4
+#
+ip vpn-instance CUSTOMER_3
+ipv4-family
+route-distinguisher 300:1
+vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/3
  description PE-4 <-> CE-3
