@@ -152,6 +152,7 @@ route-distinguisher 300:1
 vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/2
+ ip binding vpn-instance CUSTOMER_3
  description PE-3 <-> CE-3
  ip address 192.168.3.1 255.255.255.252
  undo shutdown
@@ -181,6 +182,7 @@ route-distinguisher 300:1
 vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/3
+ ip binding vpn-instance CUSTOMER_3
  description PE-4 <-> CE-3
  ip address 192.168.3.5 255.255.255.252
  undo shutdown
