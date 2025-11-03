@@ -106,12 +106,12 @@ sysname PE-2
 #
 ip vpn-instance CUSTOMER_1
 ipv4-family
-route-distinguisher 100:1
+route-distinguisher 400:1
 vpn-target 111:1 both
 #
 ip vpn-instance CUSTOMER_2
 ipv4-family
-route-distinguisher 200:1
+route-distinguisher 500:1
 vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/0
