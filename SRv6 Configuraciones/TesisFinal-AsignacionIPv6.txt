@@ -1,0 +1,347 @@
+=========================Configuracion SR-MPLS=====================
+https://sg.o3community.huawei.com/sg/en/learning/1783685055601291266
+1. Se uniran 3 sities  == 2 CEs
+2. Se usaran 8 routers == 4 PE y 2 P
+3. Se usara 2 router   =  2 RR                                                                                                                                                                                                                                                                                                                                                                                                                       
+-------------------------------
+				TOTAL =   10 ROUTERS
+
+Todos los PE-X seran lo1 = X.X.X.10
+Todos los P-X seran lo1 = X.X.X.14
+Todos los RR-X seran lo1 = X.X.X.27
+
+#################CE-1#########################
+system-view
+sysname CE-1
+#
+interface GE0/0/5
+ description CE-1 <-> PE-1
+ ipv6 en
+ ipv6 address 192.168.1.2 255.255.255.252
+ undo shutdown
+#
+interface GE0/0/6
+ description CE-1 <-> PE-2
+ ip address 192.168.1.6 255.255.255.252
+ undo shutdown
+#
+return
+
+#################CE-2#########################
+system-view
+sysname CE-2
+#
+interface GE0/0/5
+ description CE-2 <-> PE-2
+ ip address 192.168.2.6 255.255.255.252
+ undo shutdown
+#
+interface GE0/0/6
+ description CE-2 <-> PE-1
+ ip address 192.168.2.2 255.255.255.252
+ undo shutdown
+#
+return
+
+#################CE-3#########################
+system-view
+sysname CE-3
+#
+interface GE0/0/2
+ description CE-3 <-> PE-3
+ ip address 192.168.3.2 255.255.255.252
+ undo shutdown
+#
+interface GE0/0/3
+ description CE-3 <-> PE-4
+ ip address 192.168.3.6 255.255.255.252
+ undo shutdown
+#
+return
+
+#################PE-1#########################
+system-view
+sysname PE-1
+#
+ip vpn-instance CUSTOMER_1
+ipv4-family
+route-distinguisher 100:1
+vpn-target 111:1 both
+#
+ip vpn-instance CUSTOMER_2
+ipv4-family
+route-distinguisher 200:1
+vpn-target 111:1 both
+#
+interface GigabitEthernet3/0/0
+ description PE-1 <-> P-1
+ ipv6 address FC10:10::1/64 
+ undo shutdown
+#
+interface GigabitEthernet3/0/2
+ description PE-1 <-> P-2
+ ipv6 address FC10:14::1/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/5
+ ip binding vpn-instance CUSTOMER_1
+ description PE-1 <-> CE-1
+ ip address 192.168.1.1 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/6
+ ip binding vpn-instance CUSTOMER_2
+ description PE-1 <-> CE-2
+ ip address 192.168.2.1 255.255.255.252
+ undo shutdown
+#
+interface lo0
+ipv6 add FCBB:BB00:1::10/128
+#
+return
+
+
+#################PE-2#########################
+system-view
+sysname PE-2
+#
+ip vpn-instance CUSTOMER_1
+ipv4-family
+route-distinguisher 400:1
+vpn-target 111:1 both
+#
+ip vpn-instance CUSTOMER_2
+ipv4-family
+route-distinguisher 500:1
+vpn-target 111:1 both
+#
+interface GigabitEthernet3/0/0
+ description PE-2 <-> P-2
+ ipv6 address FC10:25::1/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/2
+ description PE-2 <-> P-1
+ ipv6 address FC10:28::1/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/5
+ ip binding vpn-instance CUSTOMER_2
+ description PE-2 <-> CE-2
+ ip address 192.168.2.5 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/6
+ ip binding vpn-instance CUSTOMER_1
+ description PE-2 <-> CE-1
+ ip address 192.168.1.5 255.255.255.252
+ undo shutdown
+#
+interface lo0
+ipv6 add FCBB:BB00:2::10/128 
+#
+return
+
+
+#################PE-3#########################
+system-view
+sysname PE-3
+#
+ip vpn-instance CUSTOMER_3
+ipv4-family
+route-distinguisher 300:1
+vpn-target 111:1 both
+#
+interface GigabitEthernet3/0/2
+ ip binding vpn-instance CUSTOMER_3
+ description PE-3 <-> CE-3
+ ip address 192.168.3.1 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/5
+ description PE-3 <-> P-4
+ ipv6 address FC10:27::1/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/6
+ description PE-3 <-> P-3
+ ipv6 address FC10:7::1/64
+ undo shutdown
+#
+interface lo0
+ipv add FCBB:BB00:3::10/128
+#
+return
+
+#################PE-4#########################
+system-view
+sysname PE-4
+#
+ip vpn-instance CUSTOMER_3
+ipv4-family
+route-distinguisher 300:1
+vpn-target 111:1 both
+#
+interface GigabitEthernet3/0/3
+ ip binding vpn-instance CUSTOMER_3
+ description PE-4 <-> CE-3
+ ip address 192.168.3.5 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/5
+ description PE-4 <-> P-3
+ ipv address FC10:24::1/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/6
+ description PE-4 <-> P-4
+ ipv address FC10:9::1/64
+ undo shutdown
+#
+interface lo0
+ipv add FCBB:BB00:4::10/128
+#
+
+
+#################P-1#########################
+system-view
+sysname P-1
+#
+interface GigabitEthernet3/0/0
+ description P-1 <-> PE-1
+ ipv address FC10:10::2/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/1
+ description P-1 <-> P-3
+ ipv address FC10:18::2/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/2
+ description P-1 <-> PE-2
+ ipv address FC10:28::2/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/3
+ description P-1 <-> P-4
+ ipv address FC10:8::2/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/4
+ description P-1 <-> P-2
+ ipv6 address FC10:12::1/64
+ undo shutdown
+#
+interface lo0
+ipv add FCBB:BB00:1::14/128
+#
+
+
+#################P-2#########################
+system-view
+sysname P-2
+#
+interface GigabitEthernet3/0/0
+ description P-2 <-> PE-2
+ ipv address FC10:25::2/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/1
+ description P-2 <-> P-4
+ ipv address FC10:5::2/64
+
+ undo shutdown
+#
+interface GigabitEthernet3/0/2
+ description P-2 <-> PE-1
+ ipv address FC10:14::2/64
+
+ undo shutdown
+#
+interface GigabitEthernet3/0/3
+ description P-2 <-> P-3
+ ipv address FC10:30::2/64
+ undo shutdown
+#
+interface GigabitEthernet3/0/4
+ description P-2 <-> P-1
+ ipv address FC10:12::2/64
+ undo shutdown
+#
+#
+interface lo0
+ip add 2.2.2.14 32
+#
+return
+
+#################P-3#########################
+system-view
+sysname P-3
+#
+interface GigabitEthernet 3/0/0
+ description P-3 <-> P-4
+ ipv address FC10:15::1/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/1
+ description P-3 <-> P-1
+ ipv address FC10:18::1/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/3
+ description P-3 <-> P-2
+ ipv address FC10:30::1/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/5
+ description P-3 <-> PE-4
+ ipv address FC10:24::2/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/6
+ description P-3 <-> PE-3
+ ipv address FC10:7::2/64
+ undo shutdown
+#
+interface lo0
+ipv add FCBB:BB00:3::14/128
+#
+return
+
+#################P-4#########################
+system-view
+sysname P-4
+#
+interface GigabitEthernet 3/0/0
+ description P-4 <-> P-3
+ ipv address FC10:15::2/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/1
+ description P-4 <-> P-2
+ ipv address FC10:5::1/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/3
+ description P-4 <-> P-1
+ ipv address FC10:8::1/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/5
+ description P-4 <-> PE-3
+ ipv address FC10:27::2/64
+ undo shutdown
+#
+interface GigabitEthernet 3/0/6
+ description P-4 <-> PE-4
+ ipv address FC10:9::2/64
+ undo shutdown
+#
+#
+interface lo0
+ipv add FCBB:BB00:4::14/128
+#
+return
+
+
+

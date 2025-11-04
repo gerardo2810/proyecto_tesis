@@ -1,0 +1,165 @@
+=========================Configuracion SR-MPLS=====================
+https://sg.o3community.huawei.com/sg/en/learning/1783685055601291266
+1. Se uniran 3 sities  == 2 CEs
+2. Se usaran 8 routers == 4 PE y 2 P
+3. Se usara 2 router   =  2 RR                                                                                                                                                                                                                                                                                                                                                                                                                       
+-------------------------------
+				TOTAL =   10 ROUTERS
+				
+			
+##################PE-1##################3
+isis 1
+is-leve level-1 
+network-entity 49.0001.0000.0001.00
+ipv6 enabl topol ipv6
+inter g3/0/0
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/2
+isis ipv6 enable
+isis circuit-level level-1
+inter lo0
+isis ipv6 enable
+
+##################PE-2##################3
+isis 1
+is-leve level-1 
+network-entity 49.0001.0000.0002.00
+ipv6 enabl topol ipv6
+inter g3/0/0
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/2
+isis ipv6 enable
+isis circuit-level level-1
+
+
+inter lo0
+isis e 1
+
+##################PE-3##################3
+isis 1
+is-leve level-1 
+network-entity 49.0002.0000.0001.00
+ipv6 enabl topol ipv6
+inter g3/0/5
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/6
+isis ipv6 enable
+isis circuit-level level-1
+
+inter lo0
+isis ipv6 enable
+
+##################PE-4##################3
+isis 1
+is-leve level-1 
+network-entity 49.0002.0000.0002.00
+ipv6 enabl topol ipv6
+inter g3/0/6
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/5
+isis ipv6 enable
+isis circuit-level level-1
+inter lo0
+isis ipv6 enable
+
+
+
+##################P-1##################3
+isis 1
+is-leve level-1-2
+network-entity 49.0000.0000.0001.00
+ipv6 enabl topol ipv6
+default-route-advertise  level-1  avoid-learning 
+inter g3/0/0
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/1
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/2
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/3
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/4
+isis ipv6 enable
+isis circuit-level level-1-2
+inter lo0
+isis ipv6 enable
+
+##################P-2##################
+isis 1
+is-leve level-1-2
+network-entity 49.0000.0000.0002.00
+ipv6 enabl topol ipv6
+default-route-advertise  level-1  avoid-learning 
+inter g3/0/0
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/1
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/2
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/3
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/4
+isis ipv6 enable
+isis circuit-level level-1-2
+inter lo0
+isis ipv6 enable
+
+##################P-3##################
+isis 1
+is-leve level-1-2
+network-entity 49.0000.0000.0003.00
+ipv6 enabl topol ipv6
+default-route-advertise  level-1  avoid-learning 
+inter g3/0/0
+isis ipv6 enable
+isis circuit-level level-1-2
+inter g3/0/1
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/3
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/5
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/6
+isis ipv6 enable
+isis circuit-level level-1
+inter lo0
+isis ipv6 enable
+
+##################P-4##################
+isis 1
+is-leve level-1-2
+network-entity 49.0000.0000.0004.00
+ipv6 enabl topol ipv6
+default-route-advertise  level-1  avoid-learning 
+inter g3/0/0
+isis ipv6 enable
+isis circuit-level level-1-2
+inter g3/0/1
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/3
+isis ipv6 enable
+isis circuit-level level-2
+inter g3/0/5
+isis ipv6 enable
+isis circuit-level level-1
+inter g3/0/6
+isis ipv6 enable
+isis circuit-level level-1
+inter lo0
+isis ipv6 enable
