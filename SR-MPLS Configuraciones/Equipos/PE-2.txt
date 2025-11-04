@@ -199,8 +199,11 @@ peer 1.1.1.10 as-number 100
 peer 1.1.1.10 connect-interf lo0
 ipv4-family vpnv4
 peer 3.3.3.10 enable
+y
 peer 4.4.4.10 enable
+y
 peer 1.1.1.10 enable
+y
 ipv4-family vpn-instance CUSTOMER_1
 peer 192.168.1.6 as-number 65400
 ipv4-family vpn-instance CUSTOMER_2
