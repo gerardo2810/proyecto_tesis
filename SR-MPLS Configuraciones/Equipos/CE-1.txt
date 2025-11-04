@@ -11,9 +11,6 @@ interface GE0/0/6
  ip address 192.168.1.6 255.255.255.252
  undo shutdown
 #
-
-return
-
 bgp 65400
 peer 192.168.1.1 as-number 100
 peer 192.168.1.5 as-number 100
