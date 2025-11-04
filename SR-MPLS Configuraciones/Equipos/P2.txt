@@ -1,0 +1,71 @@
+system-view
+sysname P-2
+#
+interface GigabitEthernet3/0/0
+ description P-2 <-> PE-2
+ ip address 172.25.1.2 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/1
+ description P-2 <-> P-4
+ ip address 172.5.1.2 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/2
+ description P-2 <-> PE-1
+ ip address 172.14.1.2 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/3
+ description P-2 <-> P-3
+ ip address 172.30.1.2 255.255.255.252
+ undo shutdown
+#
+interface GigabitEthernet3/0/4
+ description P-2 <-> P-1
+ ip address 172.12.1.2 255.255.255.252
+ undo shutdown
+#
+#
+interface lo0
+ip add 2.2.2.14 32
+#
+isis 1
+is-leve level-1-2
+network-entity 49.0000.0000.0002.00
+default-route-advertise  level-1  avoid-learning 
+inter g3/0/0
+isis ena 1
+isis circuit-level level-1
+inter g3/0/1
+isis ena 1
+isis circuit-level level-2
+inter g3/0/2
+isis ena 1
+isis circuit-level level-1
+inter g3/0/3
+isis ena 1
+isis circuit-level level-2
+inter g3/0/4
+isis ena 1
+isis circuit-level level-1-2
+
+
+inter lo0
+isis e 1
+#
+mpls lsr-id 2.2.2.14
+mpls
+mpls te
+q
+segment-routing
+q
+isis 1
+cost-style wide
+traffic-eng level-1-2
+segment-routing mpls
+segment-routing global-block 16000 20000
+interface lo0
+isis prefix-sid absolute 17200
+q
+comm

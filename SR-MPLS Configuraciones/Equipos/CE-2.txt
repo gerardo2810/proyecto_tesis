@@ -1,0 +1,18 @@
+system-view
+sysname CE-2
+#
+interface GE0/0/5
+ description CE-2 <-> PE-2
+ ip address 192.168.2.6 255.255.255.252
+ undo shutdown
+#
+interface GE0/0/6
+ description CE-2 <-> PE-1
+ ip address 192.168.2.2 255.255.255.252
+ undo shutdown
+#
+return
+#
+bgp 65410
+peer 192.168.1.5 as-number 100
+peer 192.168.2.5 as-number 100
