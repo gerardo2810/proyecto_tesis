@@ -1,0 +1,373 @@
+display segment-routing ipv6 locator verbose
+#########################PE-1###################################
+#
+segment routing ipv6
+   	encapsulation source-address FCBB:BB00:1::10/64
+	locator PE-1 ipv6-prefix 101:: 64 static 32
+		opcode ::1 end no-flavor
+	quit
+#
+segment-list 1                        
+	index 1 sid 201::1 ipv6 
+	index 1 sid 203::1 ipv6 
+	index 1 sid 103::1 ipv6
+#
+segment-list 2
+	index 1 sid 201::1 ipv6 
+	index 1 sid 203::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+segment-list 3
+	index 1 sid 201::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 103::1 ipv6 
+#
+segment-list 4
+	index 1 sid 201::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+segment-list 5                        
+	index 1 sid 202::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 103::1 ipv6
+#
+segment-list 6
+	index 1 sid 202::1 ipv6 
+	index 1 sid 203::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+segment-list 7
+	index 1 sid 202::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 103::1 ipv6 
+#
+segment-list 8
+	index 1 sid 201::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+srv6-te policy-1 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 1
+#
+srv6-te policy-2 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 2
+#
+srv6-te policy-3 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 3
+#
+srv6-te policy-4 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 4
+#
+srv6-te policy-5 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 5
+#
+srv6-te policy-6 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 6
+#
+srv6-te policy-7 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 7
+#
+srv6-te policy-1 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 8
+#
+mapping-policy map-1 color 100
+match-type dscp
+index 1 dscp ipv4 11 match srv6-te-policy color 100
+#
+
+#########################PE-2################################
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:2::10/64
+	locator PE-2 ipv6-prefix 102:: 64 static 32
+		opcode ::1 end no-flavor
+#
+segment-list 1                        
+	index 1 sid 201::1 ipv6 
+	index 1 sid 203::1 ipv6 
+	index 1 sid 103::1 ipv6
+#
+segment-list 2
+	index 1 sid 201::1 ipv6 
+	index 1 sid 203::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+segment-list 3
+	index 1 sid 201::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 103::1 ipv6 
+#
+segment-list 4
+	index 1 sid 201::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+segment-list 5                        
+	index 1 sid 202::1 ipv6 
+	index 1 sid 203::1 ipv6 
+	index 1 sid 103::1 ipv6
+#
+segment-list 6
+	index 1 sid 202::1 ipv6 
+	index 1 sid 203::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+segment-list 7
+	index 1 sid 202::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 103::1 ipv6 
+#
+segment-list 8
+	index 1 sid 201::1 ipv6 
+	index 1 sid 204::1 ipv6 
+	index 1 sid 104::1 ipv6 
+#
+srv6-te policy-1 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 1
+#
+srv6-te policy-2 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 2
+#
+srv6-te policy-3 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 3
+#
+srv6-te policy-4 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 4
+#
+srv6-te policy-5 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 5
+#
+srv6-te policy-6 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 6
+#
+srv6-te policy-7 endpoint 103::1 color 100
+candidate-path preference 200
+segment-list 7
+#
+srv6-te policy-1 endpoint 104::1 color 200
+candidate-path preference 200
+segment-list 8
+#
+isis 1
+	segment-routing ipv6 locator PE-2
+q
+
+#########################PE-3################################
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:3::10/64
+	locator PE-3 ipv6-prefix 103:: 64 static 32
+		opcode ::1 end no-flavor
+#
+segment-list 1                        
+	index 1 sid 203::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 101::1 ipv6
+#
+segment-list 2
+	index 1 sid 203::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+segment-list 3
+	index 1 sid 203::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 101::1 ipv6 
+#
+segment-list 4
+	index 1 sid 203::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+segment-list 5                        
+	index 1 sid 204::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 101::1 ipv6
+#
+segment-list 6
+	index 1 sid 204::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+segment-list 7
+	index 1 sid 204::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 101::1 ipv6 
+#
+segment-list 8
+	index 1 sid 204::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+srv6-te policy-1 endpoint 101::1 color 100
+candidate-path preference 200
+segment-list 1
+#
+srv6-te policy-2 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 2
+#
+srv6-te policy-3 endpoint 101::1 color 100
+candidate-path preference 200
+segment-list 3
+#
+srv6-te policy-4 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 4
+#
+srv6-te policy-5 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 5
+#
+srv6-te policy-6 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 6
+#
+srv6-te policy-7 endpoint 101::1 color 100
+candidate-path preference 200
+segment-list 7
+#
+srv6-te policy-1 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 8
+#
+ipv4-family vpn-instance CUSTOMER_3
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-3
+quit
+#
+isis 1
+	segment-routing ipv6 locator PE-3
+
+#########################PE-4################################
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:4::10/64
+	locator PE-4 ipv6-prefix 102:: 64 static 32
+	opcode ::1 end no-flavor
+quit
+#
+segment-list 1                        
+	index 1 sid 203::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 101::1 ipv6
+#
+segment-list 2
+	index 1 sid 203::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+segment-list 3
+	index 1 sid 203::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 101::1 ipv6 
+#
+segment-list 4
+	index 1 sid 203::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+segment-list 5                        
+	index 1 sid 204::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 101::1 ipv6
+#
+segment-list 6
+	index 1 sid 204::1 ipv6 
+	index 1 sid 202::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+segment-list 7
+	index 1 sid 204::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 101::1 ipv6 
+#
+segment-list 8
+	index 1 sid 204::1 ipv6 
+	index 1 sid 201::1 ipv6 
+	index 1 sid 102::1 ipv6 
+#
+srv6-te policy-1 endpoint 101::1 color 100
+candidate-path preference 200
+segment-list 1
+#
+srv6-te policy-2 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 2
+#
+srv6-te policy-3 endpoint 101::1 color 100
+candidate-path preference 200
+segment-list 3
+#
+srv6-te policy-4 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 4
+#
+srv6-te policy-5 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 5
+#
+srv6-te policy-6 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 6
+#
+srv6-te policy-7 endpoint 101::1 color 100
+candidate-path preference 200
+segment-list 7
+#
+srv6-te policy-1 endpoint 102::1 color 100
+candidate-path preference 200
+segment-list 8
+#
+isis 1
+segment-routing ipv6 locator PE-4
+q
+
+=================================P1=========================
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:1::14/64
+	locator P-1 ipv6-prefix 201:: 64 static 32
+	opcode ::1 end no-flavor
+#
+isis 1
+	segment-routing ipv6 locator P-1
+=================================P2=========================
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:2::14/64
+	locator P-1 ipv6-prefix 202:: 64 static 32
+	opcode ::1 end no-flavor
+#
+isis 1
+	segment-routing ipv6 locator P-2
+=================================P3=========================
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:3::14/64
+	locator P-1 ipv6-prefix 203:: 64 static 32
+	opcode ::1 end no-flavor
+#
+isis 1
+segment-routing ipv6 locator P-3
+=================================P4=========================
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:4::14/64
+	locator P-1 ipv6-prefix 204:: 64 static 32
+	opcode ::1 end no-flavor
+#
+isis 1 
+	segment-routing ipv6 locator P-4
+=====================================
+ display segment-routing ipv6 local-sid end-dt4 forwarding
+display bgp vpnv4 all routing-table 
+display ip routing-table vpn-instance vpna

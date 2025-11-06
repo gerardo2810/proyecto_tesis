@@ -1,0 +1,108 @@
+================================================PE-1====================================================
+bgp 100
+	peer FCBB:BB00:3::10 prefix-sid
+	peer FCBB:BB00:3::10 connect-interface lo0
+	peer FCBB:BB00:2::10 prefix-sid
+	peer FCBB:BB00:2::10 connect-interface lo0
+	peer FCBB:BB00:4::10 prefix-sid
+	peer FCBB:BB00:4::10 connect-interface lo0
+	ipv4-family vpnv4
+	policy vpn-target
+	peer FCBB:BB00:3::10 enable
+	y
+	peer FCBB:BB00:2::10 enable
+	y
+	peer FCBB:BB00:4::10 enable
+	y
+	quit
+	ipv4-family vpn-instance CUSTOMER_1
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-1
+	peer 192.168.1.2 as-number 65400
+	ipv4-family vpn-instance CUSTOMER_2
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-1
+	peer 192.168.2.2 as-number 65410
+	commit
+	quit
+	quit
+	isis 1
+	segment-routing ipv6 locator PE-1
+      q
+#
+=====================================================PE-2======================================================
+bgp 100
+	peer FCBB:BB00:3::10 prefix-sid
+	peer FCBB:BB00:3::10 connect-interface lo0
+	peer FCBB:BB00:1::10 prefix-sid
+	peer FCBB:BB00:1::10 connect-interface lo0
+	peer FCBB:BB00:4::10 prefix-sid
+	peer FCBB:BB00:4::10 connect-interface lo0
+	ipv4-family vpnv4
+	policy-family vpnv4
+	peer FCBB:BB00:3::10 enable
+	y
+	peer FCBB:BB00:1::10 enable
+	y
+	peer FCBB:BB00:4::10 enable
+	y
+quit
+	ipv4-family vpn-instance CUSTOMER_1
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-2
+	peer 192.168.1.6 as-number 65400
+	ipv4-family vpn-instance CUSTOMER_2
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-2
+	peer 192.168.2.6 as-number 65410
+	commit
+
+=====================================================PE-3======================================================
+bgp 100
+	peer FCBB:BB00:1::10 prefix-sid
+	peer FCBB:BB00:1::10 connect-interface lo0
+	peer FCBB:BB00:2::10 prefix-sid
+	peer FCBB:BB00:2::10 connect-interface lo0
+	peer FCBB:BB00:4::10 prefix-sid
+	peer FCBB:BB00:4::10 connect-interface lo0
+ipv4-family vpnv4
+	policy-family vpnv4
+	peer FCBB:BB00:1::10 enable
+	y
+	peer FCBB:BB00:2::10 enable
+	y
+	peer FCBB:BB00:4::10 enable
+	y
+	quit
+
+ipv4-family vpn-instance CUSTOMER_3
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-3
+	peer 192.168.3.2 as-number 65420
+quit
+#
+
+=====================================================PE-4======================================================
+bgp 100
+	private-4-bytes-as en
+	peer FCBB:BB00:3::10 prefix-sid
+	peer FCBB:BB00:3::10 connect-interface lo0
+	peer FCBB:BB00:1::10 prefix-sid
+	peer FCBB:BB00:1::10 connect-interface lo0
+	peer FCBB:BB00:2::10 prefix-sid
+	peer FCBB:BB00:2::10 connect-interface lo0
+ipv4-family vpnv4
+	peer FCBB:BB00:3::10 enable
+	y
+	peer FCBB:BB00:1::10 enable
+	y
+	peer FCBB:BB00:2::10 enable
+	y
+quit
+#
+ipv4-family vpn-instance CUSTOMER_3
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-4
+	peer 192.168.3.6 as-number 65420
+commit
+quit
