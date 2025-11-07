@@ -75,11 +75,13 @@ vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/0
  description PE-1 <-> P-1
+ ipv6 enable
  ipv6 address FC10:10::1/64 
  undo shutdown
 #
 interface GigabitEthernet3/0/2
  description PE-1 <-> P-2
+ ipv6 enable
  ipv6 address FC10:14::1/64
  undo shutdown
 #
@@ -96,6 +98,7 @@ interface GigabitEthernet3/0/6
  undo shutdown
 #
 interface lo0
+ipv6 enable
 ipv6 add FCBB:BB00:1::10/128
 #
 return
@@ -117,11 +120,13 @@ vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/0
  description PE-2 <-> P-2
+ ipv6 enable
  ipv6 address FC10:25::1/64
  undo shutdown
 #
 interface GigabitEthernet3/0/2
  description PE-2 <-> P-1
+ ipv6 enable
  ipv6 address FC10:28::1/64
  undo shutdown
 #
@@ -138,6 +143,7 @@ interface GigabitEthernet3/0/6
  undo shutdown
 #
 interface lo0
+ipv6 enable
 ipv6 add FCBB:BB00:2::10/128 
 #
 return
@@ -160,15 +166,18 @@ interface GigabitEthernet3/0/2
 #
 interface GigabitEthernet3/0/5
  description PE-3 <-> P-4
+ ipv6 enable
  ipv6 address FC10:27::1/64
  undo shutdown
 #
 interface GigabitEthernet3/0/6
  description PE-3 <-> P-3
+ ipv6 enable
  ipv6 address FC10:7::1/64
  undo shutdown
 #
 interface lo0
+ipv6 enable
 ipv add FCBB:BB00:3::10/128
 #
 return
@@ -190,15 +199,18 @@ interface GigabitEthernet3/0/3
 #
 interface GigabitEthernet3/0/5
  description PE-4 <-> P-3
+ ipv6 enable
  ipv address FC10:24::1/64
  undo shutdown
 #
 interface GigabitEthernet3/0/6
  description PE-4 <-> P-4
+ ipv6 enable
  ipv address FC10:9::1/64
  undo shutdown
 #
 interface lo0
+ipv6 enable
 ipv add FCBB:BB00:4::10/128
 #
 
@@ -209,16 +221,19 @@ sysname P-1
 #
 interface GigabitEthernet3/0/0
  description P-1 <-> PE-1
+ ipv6 enable
  ipv address FC10:10::2/64
  undo shutdown
 #
 interface GigabitEthernet3/0/1
  description P-1 <-> P-3
+ ipv6 enable
  ipv address FC10:18::2/64
  undo shutdown
 #
 interface GigabitEthernet3/0/2
  description P-1 <-> PE-2
+ ipv6 enable
  ipv address FC10:28::2/64
  undo shutdown
 #
@@ -229,10 +244,12 @@ interface GigabitEthernet3/0/3
 #
 interface GigabitEthernet3/0/4
  description P-1 <-> P-2
+ ipv6 enable
  ipv6 address FC10:12::1/64
  undo shutdown
 #
 interface lo0
+ipv6 enable
 ipv add FCBB:BB00:1::14/128
 #
 
@@ -243,17 +260,20 @@ sysname P-2
 #
 interface GigabitEthernet3/0/0
  description P-2 <-> PE-2
+ ipv6 enable
  ipv address FC10:25::2/64
  undo shutdown
 #
 interface GigabitEthernet3/0/1
  description P-2 <-> P-4
+ ipv6 enable
  ipv address FC10:5::2/64
 
  undo shutdown
 #
 interface GigabitEthernet3/0/2
  description P-2 <-> PE-1
+ ipv6 enable
  ipv address FC10:14::2/64
 
  undo shutdown
@@ -265,12 +285,14 @@ interface GigabitEthernet3/0/3
 #
 interface GigabitEthernet3/0/4
  description P-2 <-> P-1
+ ipv6 enable
  ipv address FC10:12::2/64
  undo shutdown
 #
 #
 interface lo0
-ip add 2.2.2.14 32
+ipv6 enable
+ip add FCBB:BB00:2::14/128
 #
 return
 
@@ -280,30 +302,36 @@ sysname P-3
 #
 interface GigabitEthernet 3/0/0
  description P-3 <-> P-4
+ ipv6 enable
  ipv address FC10:15::1/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/1
  description P-3 <-> P-1
+ ipv6 enable
  ipv address FC10:18::1/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/3
  description P-3 <-> P-2
+ ipv6 enable
  ipv address FC10:30::1/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/5
  description P-3 <-> PE-4
+ ipv6 enable
  ipv address FC10:24::2/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/6
  description P-3 <-> PE-3
+ ipv6 enable
  ipv address FC10:7::2/64
  undo shutdown
 #
 interface lo0
+ipv6 enable
 ipv add FCBB:BB00:3::14/128
 #
 return
@@ -314,31 +342,37 @@ sysname P-4
 #
 interface GigabitEthernet 3/0/0
  description P-4 <-> P-3
+ ipv6 enable
  ipv address FC10:15::2/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/1
  description P-4 <-> P-2
+ ipv6 enable
  ipv address FC10:5::1/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/3
  description P-4 <-> P-1
+ ipv6 enable
  ipv address FC10:8::1/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/5
  description P-4 <-> PE-3
+ ipv6 enable
  ipv address FC10:27::2/64
  undo shutdown
 #
 interface GigabitEthernet 3/0/6
  description P-4 <-> PE-4
+ ipv6 enable
  ipv address FC10:9::2/64
  undo shutdown
 #
 #
 interface lo0
+ipv6 enable
 ipv add FCBB:BB00:4::14/128
 #
 return
