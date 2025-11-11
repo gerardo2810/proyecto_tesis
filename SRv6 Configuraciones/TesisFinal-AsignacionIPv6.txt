@@ -239,6 +239,7 @@ interface GigabitEthernet3/0/2
 #
 interface GigabitEthernet3/0/3
  description P-1 <-> P-4
+ ipv6 enable
  ipv address FC10:8::2/64
  undo shutdown
 #
@@ -280,6 +281,7 @@ interface GigabitEthernet3/0/2
 #
 interface GigabitEthernet3/0/3
  description P-2 <-> P-3
+ ipv6 enable
  ipv address FC10:30::2/64
  undo shutdown
 #
