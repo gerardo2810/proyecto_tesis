@@ -1,0 +1,144 @@
+#
+sysname PE-3
+#
+#
+isis 1
+ is-level level-1
+ network-entity 49.0002.0000.0001.00
+ cost-st wide
+ #
+ ipv6 enable topology ipv6
+ #
+#
+interface GigabitEthernet3/0/2
+ description PE-3 <-> CE-3
+ undo shutdown
+ ip binding vpn-instance CUSTOMER_3
+ ip address 192.168.3.1 255.255.255.252
+#
+interface GigabitEthernet3/0/5
+ description PE-3 <-> P-4
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:27::1/64
+ isis ipv6 enable 1
+ isis circuit-level level-1
+#
+interface GigabitEthernet3/0/6
+ description PE-3 <-> P-3
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:7::1/64
+ isis ipv6 enable 1
+ isis circuit-level level-1
+#
+
+interface LoopBack0
+ ipv6 enable
+ ipv6 address FCBB:BB00:3::10/128
+ isis ipv6 enable 1
+#
+segment routing ipv6
+	encapsulation source-address FCBB:BB00:3::10/64
+	locator PE-3 ipv6-prefix 103:: 64 static 32
+		opcode ::1 end no-flavor
+#
+segment-list 1                        
+	index 1 sid 203::1 ipv6 
+	index 2 sid 201::1 ipv6 
+	index 3 sid 101::1 ipv6
+#
+segment-list 2
+	index 1 sid 203::1 ipv6 
+	index 2 sid 201::1 ipv6 
+	index 3 sid 102::1 ipv6 
+#
+segment-list 3
+	index 1 sid 203::1 ipv6 
+	index 2 sid 202::1 ipv6 
+	index 3 sid 101::1 ipv6 
+#
+segment-list 4
+	index 1 sid 203::1 ipv6 
+	index 2 sid 202::1 ipv6 
+	index 3 sid 102::1 ipv6 
+#
+segment-list 5                        
+	index 1 sid 204::1 ipv6 
+	index 2 sid 202::1 ipv6 
+	index 3 sid 101::1 ipv6
+#
+segment-list 6
+	index 1 sid 204::1 ipv6 
+	index 2 sid 202::1 ipv6 
+	index 3 sid 102::1 ipv6 
+#
+segment-list 7
+	index 1 sid 204::1 ipv6 
+	index 2 sid 201::1 ipv6 
+	index 3 sid 101::1 ipv6 
+#
+segment-list 8
+	index 1 sid 204::1 ipv6 
+	index 2 sid 201::1 ipv6 
+	index 3 sid 102::1 ipv6 
+#
+srv6-te policy-1 endpoint 101::1 color 100
+	candidate-path preference 300
+	segment-list 1
+	candidate-path preference 200
+	segment-list 3
+#
+srv6-te policy-2 endpoint 102::1 color 200
+	candidate-path preference 400
+	segment-list 2
+	candidate-path preference 300
+	segment-list 4
+#
+srv6-te policy-3 endpoint 101::1 color 101
+	candidate-path preference 300
+	segment-list 5
+	candidate-path preference 200
+	segment-list 7
+#
+srv6-te policy-4 endpoint 102::1 color 201
+	candidate-path preference 400
+	segment-list 6
+	candidate-path preference 300
+	segment-list 8
+#
+mapping-policy map-1 color 182
+	match-type dscp
+	index 1 dscp ipv4 26 match srv6-te-policy color 100
+	index 2 dscp ipv4 26 match srv6-te-policy color 200
+	index 3 dscp ipv4 46 match srv6-te-policy color 101
+	index 4 dscp ipv4 46 match srv6-te-policy color 201
+#
+bgp 100
+	peer FCBB:BB00:1::10 as-number 100
+	peer FCBB:BB00:1::10 connect-interface lo0
+	peer FCBB:BB00:2::10 as-number 100
+	peer FCBB:BB00:2::10 connect-interface lo0
+	peer FCBB:BB00:4::10 as-number 100
+	peer FCBB:BB00:4::10 connect-interface lo0
+	ipv4-family vpnv4
+	policy-family vpnv4
+	peer FCBB:BB00:1::10 enable
+	y
+	peer FCBB:BB00:2::10 enable
+	y
+	peer FCBB:BB00:4::10 enable
+	y
+	quit
+	peer FCBB:BB00:1::10 prefix-sid
+	peer FCBB:BB00:2::10 prefix-sid
+	peer FCBB:BB00:4::10 prefix-sid
+#
+ipv4-family vpn-instance CUSTOMER_3
+	segment-routing ipv6 best-effort
+	segment-routing ipv6 locator PE-3
+	peer 192.168.3.2 as-number 65420
+quit
+#
+isis 1
+	segment-routing ipv6 locator PE-3
