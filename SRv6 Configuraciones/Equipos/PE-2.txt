@@ -176,4 +176,27 @@ quit
 isis 1
 	segment-routing ipv6 locator PE-2
 q
+#
+ip-prefix color100_1 index  10 permit <ip-loopback_CE1> 32
+	route-policy color100 permit node 10
+	if-match ip-prefix color100_1
+		apply extcommunity color 0:100
+route-policy color100 permit node 10
+
+ip-prefix color100_2 index  20 permit <ip-loopback_CE2> 32
+	route-policy color100 permit node 10
+	if-match ip-prefix color100_1
+		apply extcommunity color 0:100
+	route-policy color100 permit node 20    
+#
+tunnel-policy tunnel-policy-1
+	tunnel select-seq ipv6 srv6-te-policy load-balance-number 1
+#
+ip vpn-instance CUSTOMER_2
+	tnl-policy tunnel-policy-1
+	apply-policy tunnel-policy-1
+#
+ip vpn-instance CUSTOMER_3
+	tnl-policy tunnel-policy-1
+	apply-policy tunnel-policy-1
 
