@@ -1,5 +1,27 @@
+#
 sysname P-1
 #
+segment-routing ipv6
+ encapsulation source-address FCBB:BB00:1::14
+ locator P-1 ipv6-prefix 201:: 64 static 32
+  opcode ::1 end no-flavor
+#
+ip ipv6-prefix PE-LOOPV6 index 10 permit FCBB:BB00:4::10 128
+ip ipv6-prefix PE-LOOPV6 index 20 permit FCBB:BB00:3::10 128
+ip ipv6-prefix PE-LOOPV6 index 30 permit 103::1 64
+ip ipv6-prefix PE-LOOPV6 index 40 permit 104::1 64
+#
+route-policy LEAK-PE-V6 permit node 10
+ if-match ipv6 address prefix-list PE-LOOPV6
+#
+isis 1
+ cost-style wide
+ network-entity 49.0000.0000.0001.00
+ #
+ ipv6 enable topology ipv6
+ ipv6 import-route isis level-2 into level-1 filter-policy route-policy LEAK-PE-V6
+ segment-routing ipv6 locator P-1
+ #
 interface GigabitEthernet3/0/0
  description P-1 <-> PE-1
  undo shutdown
@@ -39,28 +61,10 @@ interface GigabitEthernet3/0/4
  ipv6 address FC10:12::1/64
  isis ipv6 enable 1
 #
-face LoopBack0
+interface LoopBack0
  ipv6 enable
  ipv6 address FCBB:BB00:1::14/128
  isis ipv6 enable 1
 #
-
-
-
-ip ipv6-prefix PE-LOOPV6 index 10 permit FCBB:BB00:4::10 128
-ip ipv6-prefix PE-LOOPV6 index 20 permit FCBB:BB00:3::10 128
-#
-route-policy LEAK-PE-V6 permit node 10
- if-match ipv6 address prefix-list PE-LOOPV6
- 
- 
-#
-isis 1
- network-entity 49.0000.0000.0001.00
- #
- ipv6 enable topology ipv6
- ipv6 default-route-advertise always avoid-learning
- ipv6 import-route isis level-2 into level-1 filter-policy route-policy LEAK-PE-V6
- ipv6 import-route direct
- #
+interface NULL0
 #

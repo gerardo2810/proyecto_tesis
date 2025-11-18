@@ -1,6 +1,5 @@
 #
 sysname PE-1
-
 #
 ip vpn-instance CUSTOMER_1
  ipv4-family
@@ -16,16 +15,78 @@ ip vpn-instance CUSTOMER_2
   vpn-target 111:1 export-extcommunity
   vpn-target 111:1 import-extcommunity
 #
+segment-routing ipv6
+ encapsulation source-address FCBB:BB00:1::10
+ locator PE-1 ipv6-prefix 101:: 64 static 32
+  opcode ::1 end no-flavor
+ segment-list 1
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 203::1
+  index 3 sid ipv6 103::1
+ segment-list 2
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 203::1
+  index 3 sid ipv6 104::1
+ segment-list 3
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 103::1
+ segment-list 4
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 104::1
+ segment-list 5
+  index 1 sid ipv6 202::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 103::1
+ segment-list 6
+  index 1 sid ipv6 202::1
+  index 2 sid ipv6 203::1
+  index 3 sid ipv6 104::1
+ segment-list 7
+  index 1 sid ipv6 202::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 103::1
+ segment-list 8
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 104::1
+ srv6-te policy policy-1 endpoint fcbb:bb00:3::10 color 100
+  candidate-path preference 300
+   segment-list 1
+  candidate-path preference 200
+   segment-list 3
+ srv6-te policy policy-2 endpoint  fcbb:bb00:4::10 color 200
+  candidate-path preference 400
+   segment-list 2
+  candidate-path preference 300
+   segment-list 4
+ srv6-te policy policy-3 endpoint  fcbb:bb00:3::10 color 101
+  candidate-path preference 300
+   segment-list 5
+  candidate-path preference 200
+   segment-list 7
+ srv6-te policy policy-4 endpoint  fcbb:bb00:4::10 color 201
+  candidate-path preference 400
+   segment-list 6
+  candidate-path preference 300
+   segment-list 8
+ mapping-policy map-1 color 1000
+  match-type dscp
+   index 1 dscp ipv4 26 match srv6-te-policy color 100
+   index 2 dscp ipv4 46 match srv6-te-policy color 101
+   index 3 dscp ipv4 18 match srv6-te-policy color 200
+   index 4 dscp ipv4 48 match srv6-te-policy color 201
 #
 isis 1
  is-level level-1
+ cost-style wide
  network-entity 49.0001.0000.0001.00
- cost-st wide
  #
  ipv6 enable topology ipv6
+ segment-routing ipv6 locator PE-1
  #
 #
-
 interface GigabitEthernet3/0/0
  description PE-1 <-> P-1
  undo shutdown
@@ -59,136 +120,50 @@ interface LoopBack0
  ipv6 address FCBB:BB00:1::10/128
  isis ipv6 enable 1
 #
-
-segment routing ipv6
-   	encapsulation source-address FCBB:BB00:1::10/64
-	locator PE-1 ipv6-prefix 101:: 64 static 32
-		opcode ::1 end no-flavor
-	quit
+ip ip-prefix color100-1 index 10 permit 33.33.33.33 32
 #
-segment-list 1                        
-	index 1 sid 201::1 ipv6 
-	index 2 sid 203::1 ipv6 
-	index 3 sid 103::1 ipv6
-#
-segment-list 2
-	index 1 sid 201::1 ipv6 
-	index 2 sid 203::1 ipv6 
-	index 3 sid 104::1 ipv6 
-#
-segment-list 3
-	index 1 sid 201::1 ipv6 
-	index 2 sid 204::1 ipv6 
-	index 3 sid 103::1 ipv6 
-#
-segment-list 4
-	index 1 sid 201::1 ipv6 
-	index 2 sid 204::1 ipv6 
-	index 3 sid 104::1 ipv6 
-#
-segment-list 5                        
-	index 1 sid 202::1 ipv6 
-	index 2 sid 204::1 ipv6 
-	index 3 sid 103::1 ipv6
-#
-segment-list 6
-	index 1 sid 202::1 ipv6 
-	index 2 sid 203::1 ipv6 
-	index 3 sid 104::1 ipv6 
-#
-segment-list 7
-	index 1 sid 202::1 ipv6 
-	index 2 sid 204::1 ipv6 
-	index 3 sid 103::1 ipv6 
-#
-segment-list 8
-	index 1 sid 201::1 ipv6 
-	index 2 sid 204::1 ipv6 
-	index 3 sid 104::1 ipv6 
-#
-srv6-te policy-1 endpoint 103::1 color 100
-	candidate-path preference 300
-	segment-list 1
-	candidate-path preference 200
-	segment-list 3
-#
-srv6-te policy-2 endpoint 104::1 color 200
-	candidate-path preference 400
-	segment-list 2
-	candidate-path preference 300
-	segment-list 4
-#
-srv6-te policy-3 endpoint 103::1 color 101
-	candidate-path preference 300
-	segment-list 5
-	candidate-path preference 200
-	segment-list 7
-#
-srv6-te policy-4 endpoint 104::1 color 201
-	candidate-path preference 400
-	segment-list 6
-	candidate-path preference 300
-	segment-list 8
-#
-mapping-policy map-1 color 182
-	match-type dscp
-	index 1 dscp ipv4 26 match srv6-te-policy color 100
-	index 2 dscp ipv4 26 match srv6-te-policy color 200
-	index 3 dscp ipv4 46 match srv6-te-policy color 101
-	index 4 dscp ipv4 46 match srv6-te-policy color 201
+route-policy color100 permit node 10
+ if-match ip-prefix color100-1
+  apply extcommunity color 0:1000
+ route-policy color100 permit node 20
 #
 bgp 100
-	peer FCBB:BB00:3::10 as-number 100
-	peer FCBB:BB00:3::10 connect-interface lo0
-	peer FCBB:BB00:2::10 as-number 100
-	peer FCBB:BB00:2::10 connect-interface lo0
-	peer FCBB:BB00:4::10 as-number 100
-	peer FCBB:BB00:4::10 connect-interface lo0
-	ipv4-family vpnv4
-		policy vpn-target
-		peer FCBB:BB00:3::10 enable
-		y
-		peer FCBB:BB00:2::10 enable
-		y
-		peer FCBB:BB00:4::10 enable
-		y
-		peer FCBB:BB00:2::10 prefix-sid
-		peer FCBB:BB00:3::10 prefix-sid
-		peer FCBB:BB00:4::10 prefix-sid
-	quit
-	ipv4-family vpn-instance CUSTOMER_1
-	segment-routing ipv6 locator PE-1
-	segment-routing ipv6 best-effort
-	peer 192.168.1.2 as-number 65400
-	ipv4-family vpn-instance CUSTOMER_2
-	segment-routing ipv6 locator PE-1
-	segment-routing ipv6 best-effort
-	peer 192.168.2.2 as-number 65410
-	commit
-	quit
-	quit
-	isis 1
-		segment-routing ipv6 locator PE-1
-#		
-ip-prefix color100_1 index  10 permit  11.11.11.11 32
-	route-policy color100 permit node 10
-	if-match ip-prefix color100_1
-		apply extcommunity color 0:100
-	route-policy color100 permit node 20
-ip-prefix color100_2 index  20 permit 22.22.22.22 32
-	route-policy color100 permit node 10
-	if-match ip-prefix color100_1
-		apply extcommunity color 0:100
-		route-policy color100 permit node 20    
+ router-id 1.1.1.10
+ private-4-byte-as enable
+ peer FCBB:BB00:2::10 as-number 100
+ peer FCBB:BB00:2::10 connect-interface LoopBack0
+ peer FCBB:BB00:3::10 as-number 100
+ peer FCBB:BB00:3::10 connect-interface LoopBack0
+ peer FCBB:BB00:4::10 as-number 100
+ peer FCBB:BB00:4::10 connect-interface LoopBack0
+ #
+ ipv4-family unicast
+  undo synchronization
+ #
+ ipv4-family vpnv4
+  policy vpn-target
+  peer FCBB:BB00:2::10 enable
+  y
+  peer FCBB:BB00:2::10 prefix-sid
+  peer FCBB:BB00:3::10 enable
+  y
+  peer FCBB:BB00:3::10 route-policy color100 import
+  peer FCBB:BB00:3::10 prefix-sid
+  peer FCBB:BB00:4::10 enable
+  y
+  peer FCBB:BB00:4::10 route-policy color100 import
+  peer FCBB:BB00:4::10 prefix-sid
+ #
+ ipv4-family vpn-instance CUSTOMER_1
+  import-route direct
+  import-route static
+  segment-routing ipv6 locator PE-1
+  segment-routing ipv6 traffic-engineer
+  peer 192.168.1.2 as-number 65400
+ #
+ ipv4-family vpn-instance CUSTOMER_2
+  import-route direct
+  segment-routing ipv6 locator PE-1
+  segment-routing ipv6 traffic-engineer
+  peer 192.168.2.2 as-number 65410
 #
-tunnel-policy tunnel-policy-1
-	tunnel select-seq ipv6 srv6-te-policy load-balance-number 1
-#
-ip vpn-instance CUSTOMER_2
-	tnl-policy tunnel-policy-1
-	apply-policy tunnel-policy-1
-#
-ip vpn-instance CUSTOMER_3
-	tnl-policy tunnel-policy-1
-	apply-policy tunnel-policy-1
-

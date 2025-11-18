@@ -1,19 +1,26 @@
 #
 sysname P-3
 #
+segment-routing ipv6
+ encapsulation source-address FCBB:BB00:3::14
+ locator P-3 ipv6-prefix 203:: 64 static 32
+#
 ip ipv6-prefix PE-LOOPV6 index 10 permit FCBB:BB00:1::10 128
 ip ipv6-prefix PE-LOOPV6 index 20 permit FCBB:BB00:2::10 128
+ip ipv6-prefix PE-LOOPV6 index 30 permit 101::1 64
+ip ipv6-prefix PE-LOOPV6 index 40 permit 102::1 64
 #
 route-policy LEAK-PE-V6 permit node 10
  if-match ipv6 address prefix-list PE-LOOPV6
  apply isis level-1-2
 #
 isis 1
+ cost-style wide
  network-entity 49.0000.0000.0003.00
- cost-st wide
  #
  ipv6 enable topology ipv6
  ipv6 import-route isis level-2 into level-1 filter-policy route-policy LEAK-PE-V6
+ segment-routing ipv6 locator P-3
  #
 #
 interface GigabitEthernet3/0/0
@@ -60,10 +67,3 @@ interface LoopBack0
  ipv6 address FCBB:BB00:3::14/128
  isis ipv6 enable 1
 #
-segment routing ipv6
-	encapsulation source-address FCBB:BB00:3::14/64
-	locator P-1 ipv6-prefix 203:: 64 static 32
-	opcode ::1 end no-flavor
-#
-isis 1
-segment-routing ipv6 locator P-3
