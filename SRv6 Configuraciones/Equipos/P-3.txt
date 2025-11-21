@@ -1,9 +1,11 @@
 #
+system-view
 sysname P-3
 #
 segment-routing ipv6
  encapsulation source-address FCBB:BB00:3::14
  locator P-3 ipv6-prefix 203:: 64 static 32
+   opcode ::1 end no-flavor
 #
 ip ipv6-prefix PE-LOOPV6 index 10 permit FCBB:BB00:1::10 128
 ip ipv6-prefix PE-LOOPV6 index 20 permit FCBB:BB00:2::10 128

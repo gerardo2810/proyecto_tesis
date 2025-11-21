@@ -1,4 +1,5 @@
 #
+system-view
 sysname PE-4
 #
 tunnel-policy tunnel-policy-1 
@@ -113,16 +114,25 @@ interface LoopBack0
  ipv6 address FCBB:BB00:4::10/128
  isis ipv6 enable 1
 #
-ip ip-prefix color100-1 index 10 permit 22.22.22.22 32
-ip ip-prefix color100-1 index 20 permit 11.11.11.11 32
+ip ip-prefix CE_LOOPS index 10 permit 11.11.11.11 32
+ip ip-prefix CE_LOOPS index 20 permit 22.22.22.22 32
 #
-route-policy color100 permit node 10
- if-match ip-prefix color100-1
-  apply extcommunity color 0:1000
- route-policy color100 permit node 20
- if-match ip-prefix color100-1
-  apply extcommunity color 0:2000
-  route-policy color100 permit node 30
+ip ipv6-prefix PE1_NH index 10 permit FCBB:BB00:1::10 128
+ip ipv6-prefix PE2_NH index 10 permit FCBB:BB00:2::10 128
+#
+route-policy COLOR_FROM_PE1 permit node 10
+ if-match ip-prefix CE_LOOPS
+ if-match ipv6 next-hop prefix-list PE1_NH
+ apply extcommunity color 0:1000
+#
+route-policy COLOR_FROM_PE1 permit node 20
+#
+route-policy COLOR_FROM_PE2 permit node 10
+ if-match ip-prefix CE_LOOPS
+ if-match ipv6 next-hop prefix-list PE2_NH
+ apply extcommunity color 0:2000
+#
+route-policy COLOR_FROM_PE2 permit node 20
 #
 bgp 100
  router-id 4.4.4.10
@@ -141,11 +151,11 @@ bgp 100
   policy vpn-target
   peer FCBB:BB00:1::10 enable
   y
-  peer FCBB:BB00:1::10 route-policy color100 import
+  peer FCBB:BB00:1::10 route-policy COLOR_FROM_PE1 import
   peer FCBB:BB00:1::10 prefix-sid
   peer FCBB:BB00:2::10 enable
   y
-  peer FCBB:BB00:2::10 route-policy color100 import
+  peer FCBB:BB00:2::10 route-policy COLOR_FROM_PE2 import
   peer FCBB:BB00:2::10 prefix-sid
   peer FCBB:BB00:3::10 enable
   y

@@ -1,4 +1,5 @@
 #
+system-view
 sysname P-4
 #
 segment-routing ipv6
