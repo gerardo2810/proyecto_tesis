@@ -90,6 +90,7 @@ isis 1
  is-level level-1
  cost-style wide
  network-entity 49.0001.0000.0002.00
+ optional-checksum  enable 
  #
  ipv6 enable topology ipv6
  segment-routing ipv6 locator PE-2
@@ -102,6 +103,7 @@ interface GigabitEthernet3/0/0
  ipv6 address FC10:25::1/64
  isis ipv6 enable 1
  isis circuit-level level-1
+  isis authentication-mode  hmac-sha256 key-id  1 cipher L8#sG5!qR1&nJ7$k
 #
 interface GigabitEthernet3/0/2
  description PE-2 <-> P-1
@@ -110,6 +112,7 @@ interface GigabitEthernet3/0/2
  ipv6 address FC10:28::1/64
  isis ipv6 enable 1
  isis circuit-level level-1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher mP4$wT8^sK1&bZ6!
 #
 interface GigabitEthernet3/0/5
  description PE-2 <-> CE-2
@@ -128,6 +131,7 @@ interface LoopBack0
  ipv6 address FCBB:BB00:2::10/128
  isis enable 1
  isis ipv6 enable 1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher aF6@rP2#xT9!gM3^
 #
 ip ip-prefix CE_3 index 10 permit 33.33.33.33 32
 #
@@ -137,6 +141,7 @@ ip ipv6-prefix PE4_NH index 10 permit FCBB:BB00:4::10 128
 route-policy color1000 permit node 10
  if-match ip-prefix CE_3
  if-match ipv6 next-hop prefix-list PE3_NH
+ y
  apply extcommunity color 0:1000
 #
 route-policy color_100 permit node 20
@@ -144,6 +149,7 @@ route-policy color_100 permit node 20
 route-policy color2000 permit node 10
  if-match ip-prefix CE_3
  if-match ipv6 next-hop prefix-list PE4_NH
+ y
  apply extcommunity color 0:2000
 #
 route-policy color2000 permit node 20
@@ -153,6 +159,7 @@ bgp 100
  private-4-byte-as enable
  peer FCBB:BB00:1::10 as-number 100
  peer FCBB:BB00:1::10 connect-interface LoopBack0
+ peer FCBB:BB00:1::10 password cipher J2#nC7!vK4@xR9%g
  peer FCBB:BB00:3::10 as-number 100
  peer FCBB:BB00:3::10 connect-interface LoopBack0
  peer FCBB:BB00:4::10 as-number 100

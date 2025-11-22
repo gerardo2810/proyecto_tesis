@@ -19,6 +19,7 @@ route-policy LEAK-PE-V6 permit node 10
 isis 1
  cost-style wide
  network-entity 49.0000.0000.0003.00
+ optional-checksum  enable 
  #
  ipv6 enable topology ipv6
  ipv6 import-route isis level-2 into level-1 filter-policy route-policy LEAK-PE-V6
@@ -31,6 +32,7 @@ interface GigabitEthernet3/0/0
  ipv6 enable
  ipv6 address FC10:15::1/64
  isis ipv6 enable 1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher J2#nC7!vK4@xR9%g
 #
 interface GigabitEthernet3/0/1
  description P-3 <-> P-1
@@ -39,6 +41,7 @@ interface GigabitEthernet3/0/1
  ipv6 address FC10:18::1/64
  isis ipv6 enable 1
  isis circuit-level level-2
+ isis authentication-mode  hmac-sha256 key-id  1 cipher Z1!cN7%hQ4@vL9&j
 #
 interface GigabitEthernet3/0/3
  description P-3 <-> P-2
@@ -47,6 +50,7 @@ interface GigabitEthernet3/0/3
  ipv6 address FC10:30::1/64
  isis ipv6 enable 1
  isis circuit-level level-2
+ isis authentication-mode  hmac-sha256 key-id  1 cipher pN7!xL4#rD9@hF2%
 #
 interface GigabitEthernet3/0/5
  description P-3 <-> PE-4
@@ -55,6 +59,7 @@ interface GigabitEthernet3/0/5
  ipv6 address FC10:24::2/64
  isis ipv6 enable 1
  isis circuit-level level-1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher S5@kT1!gV8#cR3&u
 #
 interface GigabitEthernet3/0/6
  description P-3 <-> PE-3
@@ -63,9 +68,11 @@ interface GigabitEthernet3/0/6
  ipv6 address FC10:7::2/64
  isis ipv6 enable 1
  isis circuit-level level-1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher yH9#qG2!mK6@wP4$
 #
 interface LoopBack0
  ipv6 enable
  ipv6 address FCBB:BB00:3::14/128
  isis ipv6 enable 1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher aF6@rP2#xT9!gM3^
 #
