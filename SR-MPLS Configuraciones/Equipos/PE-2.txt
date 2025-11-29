@@ -3,12 +3,12 @@ sysname PE-2
 #
 ip vpn-instance CUSTOMER_1
 ipv4-family
-route-distinguisher 400:1
+route-distinguisher 100:1
 vpn-target 111:1 both
 #
-ip vpn-instance CUSTOMER_2
+ip vpn-instance CUSTOMER_1
 ipv4-family
-route-distinguisher 500:1
+route-distinguisher 100:1
 vpn-target 111:1 both
 #
 interface GigabitEthernet3/0/0
@@ -206,6 +206,5 @@ peer 1.1.1.10 enable
 y
 ipv4-family vpn-instance CUSTOMER_1
 peer 192.168.1.6 as-number 65400
-ipv4-family vpn-instance CUSTOMER_2
 peer 192.168.2.6 as-number 65410
 #
