@@ -145,10 +145,13 @@ bgp 100
  private-4-byte-as enable
  peer FCBB:BB00:1::10 as-number 100
  peer FCBB:BB00:1::10 connect-interface LoopBack0
+ peer FCBB:BB00:1::10 password cipher Q9!mG4#pZ7@cN2&x
  peer FCBB:BB00:2::10 as-number 100
  peer FCBB:BB00:2::10 connect-interface LoopBack0
+ peer FCBB:BB00:2::10 password cipher bF3@kW9!sL6#uJ1^
  peer FCBB:BB00:3::10 as-number 100
  peer FCBB:BB00:3::10 connect-interface LoopBack0
+ peer FCBB:BB00:3::10 password cipher P4#zT8!nH1@fC7&v
  #
  ipv4-family unicast
   undo synchronization
@@ -166,7 +169,6 @@ bgp 100
   peer FCBB:BB00:3::10 enable
   y
   peer FCBB:BB00:3::10 prefix-sid
-
  #
  ipv4-family vpn-instance CUSTOMER_3
   import-route direct

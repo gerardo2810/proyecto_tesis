@@ -162,8 +162,10 @@ bgp 100
  peer FCBB:BB00:1::10 password cipher J2#nC7!vK4@xR9%g
  peer FCBB:BB00:3::10 as-number 100
  peer FCBB:BB00:3::10 connect-interface LoopBack0
+ peer FCBB:BB00:3::10 password cipher X7!qR5#tN2@mV8&h
  peer FCBB:BB00:4::10 as-number 100
  peer FCBB:BB00:4::10 connect-interface LoopBack0
+ peer FCBB:BB00:4::10 password cipher bF3@kW9!sL6#uJ1^
  #
  ipv4-family unicast
   undo synchronization
