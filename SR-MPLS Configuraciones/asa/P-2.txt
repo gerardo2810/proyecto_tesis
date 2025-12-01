@@ -1,0 +1,78 @@
+#
+system-view
+sysname P-2
+#
+segment-routing ipv6
+ encapsulation source-address FCBB:BB00:2::14
+ locator P-2 ipv6-prefix 202:: 64 static 32
+  opcode ::1 end no-flavor
+#
+ip ipv6-prefix PE-LOOPV6 index 10 permit FCBB:BB00:3::10 128
+ip ipv6-prefix PE-LOOPV6 index 20 permit FCBB:BB00:4::10 128
+ip ipv6-prefix PE-LOOPV6 index 30 permit 103:: 64
+ip ipv6-prefix PE-LOOPV6 index 40 permit 104::1 64
+#
+route-policy LEAK-PE-V6 permit node 10
+ if-match ipv6 address prefix-list PE-LOOPV6
+#
+isis 1
+ cost-style wide
+ network-entity 49.0000.0000.0002.00
+ optional-checksum  enable 
+ #
+ ipv6 enable topology ipv6
+ ipv6 import-route isis level-2 into level-1 filter-policy route-policy LEAK-PE-V6
+  segment-routing ipv6 locator P-2
+ #
+#
+interface GigabitEthernet3/0/0
+ description P-2 <-> PE-2
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:25::2/64
+ isis ipv6 enable 1
+ isis circuit-level level-1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher L8#sG5!qR1&nJ7$k
+#
+interface GigabitEthernet3/0/1
+ description P-2 <-> P-4
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:5::2/64
+ isis ipv6 enable 1
+ isis circuit-level level-2
+ isis authentication-mode  hmac-sha256 key-id  1 cipher wQ2!dH9^bC4@tV6#
+#
+interface GigabitEthernet3/0/2
+ description P-2 <-> PE-1
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:14::2/64
+ isis ipv6 enable 1
+ isis circuit-level level-1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher K3@zM8!vP1#fS7&y
+#
+interface GigabitEthernet3/0/3
+ description P-2 <-> P-3
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:30::2/64
+ isis ipv6 enable 1
+ isis circuit-level level-2
+ isis authentication-mode  hmac-sha256 key-id  1 cipher pN7!xL4#rD9@hF2%
+#
+interface GigabitEthernet3/0/4
+ description P-2 <-> P-1
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:12::2/64
+ isis ipv6 enable 1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher tD3&K8!zW1#pX6$u
+#
+interface LoopBack0
+ ipv6 enable
+ ipv6 address FCBB:BB00:2::14/128
+ isis ipv6 enable 1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher aF6@rP2#xT9!gM3^
+#
+interface NULL0

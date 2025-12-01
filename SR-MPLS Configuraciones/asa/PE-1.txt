@@ -1,0 +1,190 @@
+#
+system-view
+sysname PE-1
+#
+tunnel-policy tunnel-policy-1 
+  tunnel select-seq label srv6-te-flow-group load-balance-number 1
+#
+ip vpn-instance CUSTOMER_1
+ ipv4-family
+  route-distinguisher 100:1
+  tnl-policy tunnel-policy-1
+  apply-label per-instance
+  vpn-target 111:1 export-extcommunity
+  vpn-target 111:1 import-extcommunity
+#
+ip vpn-instance CUSTOMER_1
+ ipv4-family
+  route-distinguisher 200:1
+  tnl-policy tunnel-policy-1
+  apply-label per-instance
+  vpn-target 111:1 export-extcommunity
+  vpn-target 111:1 import-extcommunity
+#
+segment-routing label
+ encapsulation source-address FCBB:BB00:1::10
+ locator PE-1 label-prefix 101:: 64 static 32
+  opcode ::1 end no-flavor
+ segment-list 1
+  index 1 sid label 17100 
+  index 2 sid label 17300 
+  index 3 sid label 16300
+ segment-list 2
+  index 1 sid label 17100
+  index 2 sid label 17400
+  index 3 sid label 16300
+ segment-list 3
+  index 1 sid label 17100
+  index 2 sid label 17300
+  index 3 sid label 16400
+ segment-list 4
+  index 1 sid label 17100
+  index 2 sid label 17400
+  index 3 sid label 16300
+ segment-list 5
+  index 1 sid label 17200
+  index 2 sid label 17400
+  index 3 sid label 16300
+ segment-list 6
+  index 1 sid label 17200
+  index 2 sid label 17400
+  index 3 sid label 16300
+ segment-list 7
+  index 1 sid label 17200
+  index 2 sid label 17300
+  index 3 sid label 16400
+ segment-list 8
+  index 1 sid label 17200
+  index 2 sid label 17400
+  index 3 sid label 16400
+ sr-te policy policy-1 endpoint 3.3.3.10 color 100
+  candidate-path preference 300
+   segment-list 1
+  candidate-path preference 200
+   segment-list 3
+ sr-te policy policy-2 endpoint  4.4.4.10 color 200
+  candidate-path preference 400
+   segment-list 2
+  candidate-path preference 300
+   segment-list 4
+ sr-te policy policy-3 endpoint  3.3.3.10 color 101
+  candidate-path preference 300
+   segment-list 5
+  candidate-path preference 200
+   segment-list 7
+ sr-te policy policy-4 endpoint  4.4.4.10 color 201
+  candidate-path preference 400
+   segment-list 6
+  candidate-path preference 300
+   segment-list 8
+  sr-te-policy group 1 
+  endpoint 3.3.3.10 
+   color 100  match dscp 26
+   color 101 match dscp 46
+  sr-te-policy group 2
+  endpoint 4.4.4.10 
+   color 100  match dscp 26
+   color 101 match dscp 46
+  
+#
+isis 1
+ is-level level-1
+ cost-style wide
+ network-entity 49.0001.0000.0001.00
+ optional-checksum  enable
+ segment-routing mpls
+#
+interface GigabitEthernet3/0/0
+ description PE-1 <-> P-1
+ undo shutdown
+ ip address 172.10.1.1 255.255.255.252
+ isis label enable 1
+ isis circuit-level level-1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher %$%DSA21SD1AS31$%
+#
+interface GigabitEthernet3/0/2
+ description PE-1 <-> P-2
+ undo shutdown
+ ip address 172.14.1.1 255.255.255.252
+ isis label enable 1
+ isis circuit-level level-1
+  isis authentication-mode  hmac-sha256 key-id  1 cipher K3@zM8!vP1#fS7&y
+#
+interface GigabitEthernet3/0/5
+ description PE-1 <-> CE-1
+ undo shutdown
+ ip binding vpn-instance CUSTOMER_1
+ ip address 192.168.1.1 255.255.255.252
+#
+interface GigabitEthernet3/0/6
+ description PE-1 <-> CE-2
+ undo shutdown
+ ip binding vpn-instance CUSTOMER_1
+ ip address 192.168.2.1 255.255.255.252
+#
+interface LoopBack0
+ ip address 1.1.1.10 32
+ isis label enable 1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher aF6@rP2#xT9!gM3^
+#
+ip ip-prefix CE_3 index 10 permit 33.33.33.33 32
+#
+ip ip-prefix PE3_NH index 10 permit 3.3.3.10 32
+ip ip-prefix PE4_NH index 10 permit 4.4.4.10 32
+#
+route-policy color1000 permit node 10
+ if-match ip-prefix CE_3
+ if-match ip next-hop prefix-list PE3_NH
+ y
+ apply extcommunity color 0:1000
+#
+route-policy color1000 permit node 20
+#
+route-policy color2000 permit node 10
+ if-match ip-prefix CE_3
+ if-match ip next-hop prefix-list PE4_NH
+ y
+ apply extcommunity color 0:2000
+#
+route-policy color2000 permit node 20
+#
+bgp 100
+ router-id 1.1.1.10
+ private-4-byte-as enable
+ peer 2.2.2.10  as-number 100
+ peer 2.2.2.10  connect-interface LoopBack0
+ peer 2.2.2.10  password cipher J2#nC7!vK4@xR9%g
+ peer 3.3.3.10 as-number 100
+ peer 3.3.3.10 connect-interface LoopBack0
+ peer 3.3.3.10 password cipher fT5@yP1#hL8!sD3^
+ peer 4.4.4.10 as-number 100
+ peer 4.4.4.10 connect-interface LoopBack0
+ peer 4.4.4.10 password cipher Q9!mG4#pZ7@cN2&x
+ #
+ ipv4-family unicast
+  undo synchronization
+ #
+ ipv4-family vpnv4
+  policy vpn-target
+  peer 2.2.2.10 enable
+  y
+  peer 2.2.2.10 prefix-sid
+  peer 3.3.3.10 enable
+  y
+  peer 3.3.3.10 route-policy color1000 import
+  peer 3.3.3.10 prefix-sid
+  peer 4.4.4.10 enable
+  y
+  peer 4.4.4.10 route-policy color2000 import
+  peer 4.4.4.10 prefix-sid
+ #
+ ipv4-family vpn-instance CUSTOMER_1
+  import-route direct
+  import-route static
+  peer 192.168.1.2 as-number 65400
+ #
+ ipv4-family vpn-instance CUSTOMER_1
+  import-route direct
+  peer 192.168.2.2 as-number 65410
+#
+

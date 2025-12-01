@@ -1,0 +1,197 @@
+#
+system-view
+sysname PE-2
+#
+tunnel-policy tunnel-policy-1 
+  tunnel select-seq ipv6 srv6-te-flow-group load-balance-number 1
+#
+ip vpn-instance CUSTOMER_1
+ ipv4-family
+  route-distinguisher 400:1
+  tnl-policy tunnel-policy-1
+  apply-label per-instance
+  vpn-target 111:1 export-extcommunity
+  vpn-target 111:1 import-extcommunity
+#
+ip vpn-instance CUSTOMER_2
+ ipv4-family
+  route-distinguisher 500:1
+  tnl-policy tunnel-policy-1
+  apply-label per-instance
+  vpn-target 111:1 export-extcommunity
+  vpn-target 111:1 import-extcommunity
+#
+segment-routing ipv6
+ encapsulation source-address FCBB:BB00:2::10
+ locator PE-2 ipv6-prefix 102:: 64 static 32
+  opcode ::1 end no-flavor
+ segment-list 1
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 203::1
+  index 3 sid ipv6 103::1
+ segment-list 2
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 203::1
+  index 3 sid ipv6 104::1
+ segment-list 3
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 103::1
+ segment-list 4
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 104::1
+ segment-list 5
+  index 1 sid ipv6 202::1
+  index 2 sid ipv6 203::1
+  index 3 sid ipv6 103::1
+ segment-list 6
+  index 1 sid ipv6 202::1
+  index 2 sid ipv6 203::1
+  index 3 sid ipv6 104::1
+ segment-list 7
+  index 1 sid ipv6 202::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 103::1
+ segment-list 8
+  index 1 sid ipv6 201::1
+  index 2 sid ipv6 204::1
+  index 3 sid ipv6 104::1
+ srv6-te policy policy-1 endpoint fcbb:bb00:3::10 color 100
+  candidate-path preference 300
+   segment-list 1
+  candidate-path preference 200
+   segment-list 3
+ srv6-te policy policy-2 endpoint fcbb:bb00:4::10 color 200
+  candidate-path preference 400
+   segment-list 2
+  candidate-path preference 300
+   segment-list 4
+ srv6-te policy policy-3 endpoint fcbb:bb00:3::10 color 101
+  candidate-path preference 300
+   segment-list 5
+  candidate-path preference 200
+   segment-list 7
+ srv6-te policy policy-4 endpoint fcbb:bb00:4::10 color 201
+  candidate-path preference 400
+   segment-list 6
+  candidate-path preference 300
+   segment-list 8
+ mapping-policy map-1 color 1000
+  match-type dscp
+   index 1 dscp ipv4 26 match srv6-te-policy color 100
+   index 2 dscp ipv4 46 match srv6-te-policy color 101
+  mapping-policy map-2 color 2000
+   match-type dscp
+   index 1 dscp ipv4 26 match srv6-te-policy color 200
+   index 2 dscp ipv4 46 match srv6-te-policy color 201
+#
+isis 1
+ is-level level-1
+ cost-style wide
+ network-entity 49.0001.0000.0002.00
+ optional-checksum  enable 
+ #
+ ipv6 enable topology ipv6
+ segment-routing ipv6 locator PE-2
+ #
+#
+interface GigabitEthernet3/0/0
+ description PE-2 <-> P-2
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:25::1/64
+ isis ipv6 enable 1
+ isis circuit-level level-1
+  isis authentication-mode  hmac-sha256 key-id  1 cipher L8#sG5!qR1&nJ7$k
+#
+interface GigabitEthernet3/0/2
+ description PE-2 <-> P-1
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:28::1/64
+ isis ipv6 enable 1
+ isis circuit-level level-1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher mP4$wT8^sK1&bZ6!
+#
+interface GigabitEthernet3/0/5
+ description PE-2 <-> CE-2
+ undo shutdown
+ ip binding vpn-instance CUSTOMER_2
+ ip address 192.168.2.5 255.255.255.252
+#
+interface GigabitEthernet3/0/6
+ description PE-2 <-> CE-1
+ undo shutdown
+ ip binding vpn-instance CUSTOMER_1
+ ip address 192.168.1.5 255.255.255.252
+#
+interface LoopBack0
+ ipv6 enable
+ ipv6 address FCBB:BB00:2::10/128
+ isis enable 1
+ isis ipv6 enable 1
+ isis authentication-mode  hmac-sha256 key-id  1 cipher aF6@rP2#xT9!gM3^
+#
+ip ip-prefix CE_3 index 10 permit 33.33.33.33 32
+#
+ip ipv6-prefix PE3_NH index 10 permit FCBB:BB00:3::10 128
+ip ipv6-prefix PE4_NH index 10 permit FCBB:BB00:4::10 128
+#
+route-policy color1000 permit node 10
+ if-match ip-prefix CE_3
+ if-match ipv6 next-hop prefix-list PE3_NH
+ y
+ apply extcommunity color 0:1000
+#
+route-policy color_100 permit node 20
+#
+route-policy color2000 permit node 10
+ if-match ip-prefix CE_3
+ if-match ipv6 next-hop prefix-list PE4_NH
+ y
+ apply extcommunity color 0:2000
+#
+route-policy color2000 permit node 20
+#
+bgp 100
+ router-id 2.2.2.10
+ private-4-byte-as enable
+ peer FCBB:BB00:1::10 as-number 100
+ peer FCBB:BB00:1::10 connect-interface LoopBack0
+ peer FCBB:BB00:1::10 password cipher J2#nC7!vK4@xR9%g
+ peer FCBB:BB00:3::10 as-number 100
+ peer FCBB:BB00:3::10 connect-interface LoopBack0
+ peer FCBB:BB00:3::10 password cipher X7!qR5#tN2@mV8&h
+ peer FCBB:BB00:4::10 as-number 100
+ peer FCBB:BB00:4::10 connect-interface LoopBack0
+ peer FCBB:BB00:4::10 password cipher bF3@kW9!sL6#uJ1^
+ #
+ ipv4-family unicast
+  undo synchronization
+ #
+ ipv4-family vpnv4
+  policy vpn-target
+  peer FCBB:BB00:1::10 enable
+  y
+  peer FCBB:BB00:1::10 prefix-sid
+  peer FCBB:BB00:3::10 enable
+  y
+  peer FCBB:BB00:3::10 route-policy color1000 import
+  peer FCBB:BB00:3::10 prefix-sid
+  peer FCBB:BB00:4::10 enable
+  y
+  peer FCBB:BB00:4::10 route-policy color2000 import
+  peer FCBB:BB00:4::10 prefix-sid
+ #
+ ipv4-family vpn-instance CUSTOMER_1
+  import-route direct
+  segment-routing ipv6 locator PE-2
+  segment-routing ipv6 traffic-engineer
+  peer 192.168.1.6 as-number 65400
+ #
+ ipv4-family vpn-instance CUSTOMER_2
+  segment-routing ipv6 locator PE-2
+  segment-routing ipv6 traffic-engineer
+  peer 192.168.2.6 as-number 65410
+#
