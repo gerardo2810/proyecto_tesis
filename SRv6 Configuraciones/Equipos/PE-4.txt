@@ -5,9 +5,9 @@ sysname PE-4
 tunnel-policy tunnel-policy-1 
   tunnel select-seq ipv6 srv6-te-flow-group load-balance-number 1
 #
-ip vpn-instance CUSTOMER_3
+ip vpn-instance CUSTOMER_1
  ipv4-family
-  route-distinguisher 300:1
+  route-distinguisher 100:1
   tnl-policy tunnel-policy-1
   apply-label per-instance
   vpn-target 111:1 export-extcommunity
@@ -170,7 +170,7 @@ bgp 100
   y
   peer FCBB:BB00:3::10 prefix-sid
  #
- ipv4-family vpn-instance CUSTOMER_3
+ ipv4-family vpn-instance CUSTOMER_1
   import-route direct
   segment-routing ipv6 traffic-engineer
   peer 192.168.3.6 as-number 65420

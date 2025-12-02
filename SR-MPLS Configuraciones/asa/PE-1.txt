@@ -21,10 +21,14 @@ ip vpn-instance CUSTOMER_1
   vpn-target 111:1 export-extcommunity
   vpn-target 111:1 import-extcommunity
 #
+	mpls lsr-id 1.1.1.10
+	mpls
+	mpls te
+	q
+#
 segment-routing label
- encapsulation source-address FCBB:BB00:1::10
- locator PE-1 label-prefix 101:: 64 static 32
-  opcode ::1 end no-flavor
+ ipv4-adjacency local-ip-addr 172.10.1.1 remote-ip-addr 172.10.1.2 sid 17100
+ ipv4-adjacency local-ip-addr 172.14.1.1 remote-ip-addr 172.14.1.2 sid 17200
  segment-list 1
   index 1 sid label 17100 
   index 2 sid label 17300 
