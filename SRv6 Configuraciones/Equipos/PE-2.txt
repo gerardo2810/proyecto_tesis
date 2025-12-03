@@ -13,14 +13,6 @@ ip vpn-instance CUSTOMER_1
   vpn-target 111:1 export-extcommunity
   vpn-target 111:1 import-extcommunity
 #
-ip vpn-instance CUSTOMER_1
- ipv4-family
-  route-distinguisher 100:1
-  tnl-policy tunnel-policy-1
-  apply-label per-instance
-  vpn-target 111:1 export-extcommunity
-  vpn-target 111:1 import-extcommunity
-#
 segment-routing ipv6
  encapsulation source-address FCBB:BB00:2::10
  locator PE-2 ipv6-prefix 102:: 64 static 32
@@ -138,13 +130,16 @@ ip ip-prefix CE_3 index 10 permit 33.33.33.33 32
 ip ipv6-prefix PE3_NH index 10 permit FCBB:BB00:3::10 128
 ip ipv6-prefix PE4_NH index 10 permit FCBB:BB00:4::10 128
 #
+ip ipv6-prefix PE3_NH index 10 permit FCBB:BB00:3::10 128
+ip ipv6-prefix PE4_NH index 10 permit FCBB:BB00:4::10 128
+#
 route-policy color1000 permit node 10
  if-match ip-prefix CE_3
  if-match ipv6 next-hop prefix-list PE3_NH
  y
  apply extcommunity color 0:1000
 #
-route-policy color_100 permit node 20
+route-policy color1000 permit node 20
 #
 route-policy color2000 permit node 10
  if-match ip-prefix CE_3
@@ -189,9 +184,5 @@ bgp 100
   segment-routing ipv6 locator PE-2
   segment-routing ipv6 traffic-engineer
   peer 192.168.1.6 as-number 65400
- #
- ipv4-family vpn-instance CUSTOMER_1
-  segment-routing ipv6 locator PE-2
-  segment-routing ipv6 traffic-engineer
   peer 192.168.2.6 as-number 65410
 #

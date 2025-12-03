@@ -91,7 +91,7 @@ isis 1
 interface GigabitEthernet3/0/3
  description PE-4 <-> CE-3
  undo shutdown
- ip binding vpn-instance CUSTOMER_3
+ ip binding vpn-instance CUSTOMER_1
  ip address 192.168.3.5 255.255.255.252
 #
 interface GigabitEthernet3/0/5

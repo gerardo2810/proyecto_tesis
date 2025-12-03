@@ -13,14 +13,6 @@ ip vpn-instance CUSTOMER_1
   vpn-target 111:1 export-extcommunity
   vpn-target 111:1 import-extcommunity
 #
-ip vpn-instance CUSTOMER_1
- ipv4-family
-  route-distinguisher 100:1
-  tnl-policy tunnel-policy-1
-  apply-label per-instance
-  vpn-target 111:1 export-extcommunity
-  vpn-target 111:1 import-extcommunity
-#
 segment-routing ipv6
  encapsulation source-address FCBB:BB00:1::10
  locator PE-1 ipv6-prefix 101:: 64 static 32
@@ -159,6 +151,7 @@ bgp 100
  peer FCBB:BB00:2::10 as-number 100
  peer FCBB:BB00:2::10 connect-interface LoopBack0
  peer FCBB:BB00:2::10 password cipher J2#nC7!vK4@xR9%g
+ peer FCBB:BB00:2::10 valid-ttl-hops 4
  peer FCBB:BB00:3::10 as-number 100
  peer FCBB:BB00:3::10 connect-interface LoopBack0
  peer FCBB:BB00:3::10 password cipher fT5@yP1#hL8!sD3^
@@ -185,15 +178,9 @@ bgp 100
  #
  ipv4-family vpn-instance CUSTOMER_1
   import-route direct
-  import-route static
   segment-routing ipv6 locator PE-1
   segment-routing ipv6 traffic-engineer
   peer 192.168.1.2 as-number 65400
- #
- ipv4-family vpn-instance CUSTOMER_1
-  import-route direct
-  segment-routing ipv6 locator PE-1
-  segment-routing ipv6 traffic-engineer
   peer 192.168.2.2 as-number 65410
 #
 
