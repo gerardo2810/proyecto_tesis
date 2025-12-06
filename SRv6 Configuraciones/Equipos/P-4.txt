@@ -23,6 +23,12 @@ isis 1
  ipv6 enable topology ipv6
  ipv6 import-route isis level-2 into level-1 filter-policy route-policy LEAK-PE-V6
  segment-routing ipv6 locator P-4
+ segment-routing ipv6 compress enable 
+ segment-routing ipv6 strict-msd-check enable
+ encapsulation-mode insert
+ ipv6 frr
+  loop-free-alternate level-1-2
+  ti-lfa level-1-2
  #
 #
 interface GigabitEthernet3/0/0

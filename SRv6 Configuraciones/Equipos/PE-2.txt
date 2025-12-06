@@ -86,6 +86,12 @@ isis 1
  #
  ipv6 enable topology ipv6
  segment-routing ipv6 locator PE-2
+ segment-routing ipv6 compress enable 
+ segment-routing ipv6 strict-msd-check enable
+ encapsulation-mode insert
+ ipv6 frr
+  loop-free-alternate level-1
+  ti-lfa level-1
  #
 #
 interface GigabitEthernet3/0/0
@@ -109,7 +115,7 @@ interface GigabitEthernet3/0/2
 interface GigabitEthernet3/0/5
  description PE-2 <-> CE-2
  undo shutdown
- ip binding vpn-instance CUSTOMER_2
+ ip binding vpn-instance CUSTOMER_1
  ip address 192.168.2.5 255.255.255.252
 #
 interface GigabitEthernet3/0/6

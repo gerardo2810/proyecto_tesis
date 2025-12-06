@@ -85,6 +85,12 @@ isis 1
  #
  ipv6 enable topology ipv6
  segment-routing ipv6 locator PE-3
+ segment-routing ipv6 compress enable 
+ segment-routing ipv6 strict-msd-check enable
+ encapsulation-mode insert
+ ipv6 frr
+  loop-free-alternate level-1
+  ti-lfa level-1
  #
 #
 interface GigabitEthernet3/0/2
@@ -161,11 +167,11 @@ bgp 100
   policy vpn-target
   peer FCBB:BB00:1::10 enable
   y
-  peer FCBB:BB00:1::10 route-policy color1000 import
+  peer FCBB:BB00:1::10 route-policy COLOR_FROM_PE1 import
   peer FCBB:BB00:1::10 prefix-sid
   peer FCBB:BB00:2::10 enable
   y
-  peer FCBB:BB00:2::10 route-policy color200 import
+  peer FCBB:BB00:2::10 route-policy COLOR_FROM_PE3 import
   peer FCBB:BB00:2::10 prefix-sid
   peer FCBB:BB00:4::10 enable
   y
