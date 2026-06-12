@@ -90,4 +90,4 @@ interface LoopBack0
  isis ipv6 enable 1
  isis authentication-mode  hmac-sha256 key-id  1 cipher aF6@rP2#xT9!gM3^
 #
-interface NULL0
+commit
