@@ -154,33 +154,25 @@ route-policy color2000 permit node 20
 bgp 100
  router-id 1.1.1.10
  private-4-byte-as enable
- peer FCBB:BB00:2::10 as-number 100
- peer FCBB:BB00:2::10 connect-interface LoopBack0
- peer FCBB:BB00:2::10 password cipher J2#nC7!vK4@xR9%g
- peer FCBB:BB00:2::10 valid-ttl-hops 4
- peer FCBB:BB00:3::10 as-number 100
- peer FCBB:BB00:3::10 connect-interface LoopBack0
- peer FCBB:BB00:3::10 password cipher fT5@yP1#hL8!sD3^
- peer FCBB:BB00:4::10 as-number 100
- peer FCBB:BB00:4::10 connect-interface LoopBack0
- peer FCBB:BB00:4::10 password cipher Q9!mG4#pZ7@cN2&x
+ peer FCBB:BB00:1::11 as-number 100
+ peer FCBB:BB00:1::11 connect-interface LoopBack0
+
+ peer FCBB:BB00:2::11 as-number 100
+ peer FCBB:BB00:2::11 connect-interface LoopBack0
  #
  ipv4-family unicast
   undo synchronization
  #
  ipv4-family vpnv4
   policy vpn-target
-  peer FCBB:BB00:2::10 enable
+  peer FCBB:BB00:1::11 enable
   y
-  peer FCBB:BB00:2::10 prefix-sid
-  peer FCBB:BB00:3::10 enable
+  peer FCBB:BB00:1::11 route-policy color1000 import
+  peer FCBB:BB00:1::11 prefix-sid
+  peer FCBB:BB00:2::11 enable
   y
-  peer FCBB:BB00:3::10 route-policy color1000 import
-  peer FCBB:BB00:3::10 prefix-sid
-  peer FCBB:BB00:4::10 enable
-  y
-  peer FCBB:BB00:4::10 route-policy color2000 import
-  peer FCBB:BB00:4::10 prefix-sid
+  peer FCBB:BB00:2::11 route-policy color2000 import
+  peer FCBB:BB00:2::11 prefix-sid
  #
  ipv4-family vpn-instance CUSTOMER_1
   import-route direct
