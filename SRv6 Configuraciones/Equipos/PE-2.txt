@@ -172,7 +172,7 @@ bgp 100
   y
   peer FCBB:BB00:1::11 route-policy color1000 import
   peer FCBB:BB00:1::11 prefix-sid
-  peer FCBB:BB00:2::10 enable
+  peer FCBB:BB00:2::11 enable
   y
   peer FCBB:BB00:2::11 route-policy color2000 import
   peer FCBB:BB00:2::11 prefix-sid
