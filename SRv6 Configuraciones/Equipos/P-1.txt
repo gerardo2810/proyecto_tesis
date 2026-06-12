@@ -76,6 +76,14 @@ interface GigabitEthernet3/0/4
  isis ipv6 enable 1
  isis authentication-mode  hmac-sha256 key-id  1 cipher tD3&K8!zW1#pX6$u
 #
+interface GigabitEthernet3/0/5
+ description P-1 <-> RR-1
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:250::1/64
+ isis ipv6 enable 1
+ isis circuit-level level-2
+#
 interface LoopBack0
  ipv6 enable
  ipv6 address FCBB:BB00:1::14/128
