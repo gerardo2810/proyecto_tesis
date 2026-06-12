@@ -11,6 +11,8 @@ ip ipv6-prefix PE-LOOPV6 index 10 permit FCBB:BB00:1::10 128
 ip ipv6-prefix PE-LOOPV6 index 20 permit FCBB:BB00:2::10 128
 ip ipv6-prefix PE-LOOPV6 index 30 permit 101::1 64
 ip ipv6-prefix PE-LOOPV6 index 40 permit 102::1 64
+ip ipv6-prefix PE-LOOPV6 index 50 permit FCBB:BB00:1::11 128
+ip ipv6-prefix PE-LOOPV6 index 60 permit FCBB:BB00:2::11 128
 #
 route-policy LEAK-PE-V6 permit node 10
  if-match ipv6 address prefix-list PE-LOOPV6
@@ -42,6 +44,14 @@ interface GigabitEthernet3/0/1
  isis ipv6 enable 1
  isis circuit-level level-2
  isis authentication-mode  hmac-sha256 key-id  1 cipher Z1!cN7%hQ4@vL9&j
+#
+interface GigabitEthernet3/0/2
+ description P-3 <-> RR-1
+ undo shutdown
+ ipv6 enable
+ ipv6 address FC10:251::1/64
+ isis ipv6 enable 1
+ isis circuit-level level-2
 #
 interface GigabitEthernet3/0/3
  description P-3 <-> P-2
