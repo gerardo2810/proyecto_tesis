@@ -11,6 +11,8 @@ ip ipv6-prefix PE-LOOPV6 index 10 permit FCBB:BB00:4::10 128
 ip ipv6-prefix PE-LOOPV6 index 20 permit FCBB:BB00:3::10 128
 ip ipv6-prefix PE-LOOPV6 index 30 permit 103::1 64
 ip ipv6-prefix PE-LOOPV6 index 40 permit 104::1 64
+ip ipv6-prefix PE-LOOPV6 index 50 permit FCBB:BB00:1::11 128
+ip ipv6-prefix PE-LOOPV6 index 60 permit FCBB:BB00:2::11 128
 #
 route-policy LEAK-PE-V6 permit node 10
  if-match ipv6 address prefix-list PE-LOOPV6
