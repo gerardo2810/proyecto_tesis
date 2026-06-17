@@ -166,7 +166,7 @@ bgp 100
   peer FCBB:BB00:1::11 prefix-sid
   peer FCBB:BB00:2::11 enable
   y
-  peer FCBB:BB00:2::11 route-policy COLOR_FROM_PE3 import
+  peer FCBB:BB00:2::11 route-policy COLOR_FROM_PE2 import
   peer FCBB:BB00:2::11 prefix-sid
  #
  ipv4-family vpn-instance CUSTOMER_1
