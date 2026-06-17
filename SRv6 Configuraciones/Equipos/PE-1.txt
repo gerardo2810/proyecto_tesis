@@ -43,7 +43,7 @@ segment-routing ipv6
   index 3 sid ipv6 104::1
  segment-list 7
   index 1 sid ipv6 202::1
-  index 2 sid ipv6 204::1
+  index 2 sid ipv6 203::1
   index 3 sid ipv6 103::1
  segment-list 8
   index 1 sid ipv6 201::1
